@@ -1,5 +1,13 @@
 DROP TABLE IF EXISTS gant, taille, type_gants;
 
+CREATE TABLE utilisateur(
+    id_utilisateur INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    identifiant VARCHAR(50),
+    mot_de_passe VARCHAR(50),
+    role_utilisateur VARCHAR,
+    nom VARCHAR(50),
+    email VARCHAR(50)
+);
 
 
 CREATE TABLE taille(
