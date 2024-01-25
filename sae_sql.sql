@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS gant, taille, type_gants;
+DROP TABLE IF EXISTS gant, taille, type_gant, utilisateur;
 
 CREATE TABLE utilisateur(
    id_utilisateur INT AUTO_INCREMENT,
@@ -9,9 +9,6 @@ CREATE TABLE utilisateur(
    role VARCHAR(255),
    PRIMARY KEY(id_utilisateur)
 );
-
-
-DROP TABLE IF EXISTS gant, taille, type_gant;
 
 CREATE TABLE taille(
     id_taille INT AUTO_INCREMENT,

@@ -62,7 +62,7 @@ def auth_signup_post():
         return redirect('/signup')
 
     # ajouter un nouveau user
-    password = generate_password_hash(password, method='sha256')
+    password = generate_password_hash(password) #method='sha256')
     tuple_insert = (login, email, password, 'ROLE_client')
     sql = """INSERT INTO utilisateur(login, email, password, role) VALUES (%s, %s, %s, %s)""" # Modifié ici
     mycursor.execute(sql, tuple_insert)
