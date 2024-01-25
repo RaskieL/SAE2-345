@@ -4,7 +4,6 @@
 from flask import Flask, request, render_template, redirect, url_for, abort, flash, session, g
 from flask import Blueprint
 
-
 from controllers.auth_security import *
 from controllers.fixtures_load import *
 
@@ -23,7 +22,24 @@ from controllers.admin_commentaire import *
 from controllers.client_liste_envies import *
 
 app = Flask(__name__)
-app.secret_key = 'une cle(token) : grain de sel(any random string)'
+app.secret_key = 'Dravendoesitallwithstyle!'
+
+import os
+from dotenv import load_dotenv
+project_folder = os.path.expanduser('~/SAE2-345')
+load_dotenv(os.path.join(project_folder, '.env'))
+
+def get_db():
+    if 'db' not in g:
+        g.db =  pymysql.connect(
+            host=os.environ.get("HOST"),                # à modifier
+            user=os.environ.get("LOGIN"),               # à modifier
+            password=os.environ.get("PASSWORD"),        # à modifier
+            database=os.environ.get("DATABASE"),
+            charset='utf8mb4',
+            cursorclass=pymysql.cursors.DictCursor
+        )
+    return g.db
 
 
 @app.teardown_appcontext
