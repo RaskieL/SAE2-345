@@ -22,7 +22,7 @@ from controllers.admin_commentaire import *
 from controllers.client_liste_envies import *
 
 app = Flask(__name__)
-app.secret_key = 'Dravendoesitallwithstyle!'
+app.secret_key = 'le cacatre est un phénomène récurrent lors des séances d\'apprentissage à la modelisation d\'objets avec des outils linguistiques et mathématiques.!'
 
 import os
 from dotenv import load_dotenv
