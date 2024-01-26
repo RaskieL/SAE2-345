@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS gant, taille, type_gant, utilisateur;
+DROP TABLE IF EXISTS ligne_commande, ligne_panier, commande, etat, gant, taille, type_gant, utilisateur;
 
 CREATE TABLE utilisateur(
    id_utilisateur INT AUTO_INCREMENT,
@@ -40,24 +40,60 @@ CREATE TABLE gant(
     FOREIGN KEY (type_gant_id) REFERENCES type_gant(id_type_gant)
 );
 
+CREATE TABLE etat(
+   id_etat INT,
+   libelle VARCHAR(255),
+   PRIMARY KEY(id_etat)
+);
+
+CREATE TABLE commande(
+   id_commande INT,
+   date_achat DATE,
+   utilisateur_id INT NOT NULL,
+   etat_id INT NOT NULL,
+   id_etat INT NOT NULL,
+   PRIMARY KEY(id_commande),
+   FOREIGN KEY(id_etat) REFERENCES etat(id_etat)
+);
+
+CREATE TABLE ligne_panier(
+   id_gant INT,
+   id_utilisateur INT,
+   quantite INT,
+   date_ajout DATE,
+   PRIMARY KEY(id_gant, id_utilisateur),
+   FOREIGN KEY(id_gant) REFERENCES gant(id_gant),
+   FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id_utilisateur)
+);
+
+CREATE TABLE ligne_commande(
+   id_gant INT,
+   id_commande INT,
+   prix DECIMAL(10,2),
+   quantite INT,
+   PRIMARY KEY(id_gant, id_commande),
+   FOREIGN KEY(id_gant) REFERENCES gant(id_gant),
+   FOREIGN KEY(id_commande) REFERENCES commande(id_commande)
+);
+
 INSERT INTO taille (num_taille_fr, taille_us, tour_de_main) VALUES
-    (6.5, 'S (F)', 17.5), -- 1
-    (7, 'M (F)', 19), -- 2
-    (7.5, 'L (F)', 20), -- 3
-    (8, 'XL (F)', 21.5), -- 4
-    (8.5, 'M (H)', 23), -- 5
-    (9, 'L (H)', 24), -- 6
-    (9.5, 'XL (H)', 25.5), -- 7
-    (10, 'XXL (H)', 27); -- 8
+    (6.5, 'S (F)', 17.5),
+    (7, 'M (F)', 19),
+    (7.5, 'L (F)', 20),
+    (8, 'XL (F)', 21.5),
+    (8.5, 'M (H)', 23),
+    (9, 'L (H)', 24),
+    (9.5, 'XL (H)', 25.5),
+    (10, 'XXL (H)', 27);
 
 INSERT INTO type_gant (nom_type_gant) VALUES
-    ('Original'), -- 1
-    ('Mitaine'), -- 2
-    ('Mouffle'), -- 3
-    ('Protection'), -- 4
-    ('Sport'), -- 5
-    ('Fantaisie'), -- 6
-    ('Autre'); -- 7
+    ('Original'),
+    ('Mitaine'),
+    ('Mouffle'),
+    ('Protection'),
+    ('Sport'),
+    ('Fantaisie'),
+    ('Autre');
 
 INSERT INTO gant (nom_gant, poids, couleur, prix_gant, taille_id, type_gant_id, fournisseur, marque, image_gant) VALUES
     ('Mouffles', 50, 'Noir', 59.99, 6, 3, 'Wedze', 'Wedze', 'mouffle.png'),
