@@ -21,7 +21,7 @@ def client_article_show():                                 # remplace client_ind
     sql3=''' prise en compte des commentaires et des notes dans le SQL    '''
     
     mycursor.execute(sql)
-    gants = mycursor.fetchall()
+    articles = mycursor.fetchall()
 
 
     # pour le filtre
@@ -36,7 +36,7 @@ def client_article_show():                                 # remplace client_ind
     else:
         prix_total = None
     return render_template('client/boutique/panier_article.html'
-                           , gants=gants
+                           , articles=articles
                            , articles_panier=articles_panier
                            #, prix_total=prix_total
                            , items_filtre=types_article

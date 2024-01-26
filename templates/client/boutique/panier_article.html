@@ -20,18 +20,18 @@
         </div>
 
         <div class="row">
-                {% for gant in gants  %}
+                {% for article in articles  %}
                         <div class="card col-4 mt-4 p-1">
                             <div class="card-body border-dark rounded p-1">
-                                <a href="/client/article/details?id_article={{ gant.id_gant }}" >
+                                <a href="/client/article/details?id_article={{ article.id_gant }}" >
                                 <h3 class="card-title">
-                                    <span style="color: #0b2e13">{{ gant.nom }}</span><br>
-                                    {{ gant.prix }}
+                                    <span style="color: #0b2e13">{{ article.nom }}</span><br>
+                                    {{ article.prix }}
                                     €
                                 </h3>
-                                     {%  if gant.image_gant is not none %}
-                                        <img class="card-img-top rounded mx-auto d-block"  style="width:100px;height:100px"  src="{{ url_for('static', filename = 'images/')}}{{ gant.image_gant }}"  alt="image  de {{ gant.nom }}" >
-                                    {% else %} <img class="card-img-top rounded mx-auto d-block"   style="width:100px;height:100px"   src="{{ url_for('static', filename='images/no_photo.jpeg')}}"  alt="image  de {{ gant.nom }}" >
+                                     {%  if article.image_gant is not none %}
+                                        <img class="card-img-top rounded mx-auto d-block"  style="width:100px;height:100px"  src="{{ url_for('static', filename = 'images/')}}{{ article.image_gant }}"  alt="image  de {{ article.nom }}" >
+                                    {% else %} <img class="card-img-top rounded mx-auto d-block"   style="width:100px;height:100px"   src="{{ url_for('static', filename='images/no_photo.jpeg')}}"  alt="image  de {{ article.nom }}" >
                                     {% endif %}
                                     <hr>
                                 </a>
@@ -39,12 +39,12 @@
 {# #}                                {% if  article.stock is defined and article.stock != None %}
 {# #}                                    {% if article.stock > 0 %}
                                         <form  action="/client/panier/add"  method="post" class="col-5">
-                                            <input type="hidden" name="id_article" value="{{ gant.id_gant }}">
+                                            <input type="hidden" name="id_article" value="{{ article.id_gant }}">
                                             <div class="input-group">
                                             <button class="btn  btn-success"  id="button-addon1">
                                                 <i class="fas fa-shopping-cart">Ajouter</i>
                                             </button>
-                                            <input type="number" id="input-{{ gant.id_gant }}" step="1" min="0" max="{{ article.stock }}" class="form-control" value="1" name="quantite"  aria-describedby="button-addon1">
+                                            <input type="number" id="input-{{ article.id_gant }}" step="1" min="0" max="{{ article.stock }}" class="form-control" value="1" name="quantite"  aria-describedby="button-addon1">
                                             </div>
                                         </form>
 {# #}                                    {% endif %}
