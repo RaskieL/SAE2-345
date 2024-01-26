@@ -13,7 +13,7 @@ def fct_fixtures_load():
     mycursor = get_db().cursor()
     sql = """DROP TABLE IF EXISTS ligne_commande, ligne_panier, commande, etat, gant, taille, type_gant, utilisateur; """
     mycursor.execute(sql)
-    
+
     sql = """
     CREATE TABLE utilisateur(
      id_utilisateur INT AUTO_INCREMENT,
@@ -84,12 +84,14 @@ def fct_fixtures_load():
     )  DEFAULT CHARSET=utf8;  
     """
     mycursor.execute(sql)
-    ########## A COMPLETER ##########
     sql = """ 
-     INSERT INTO etat
+     INSERT INTO etat(id_etat, libelle) VALUES 
+     (1,'en attente'),
+     (2,'expédié'),
+     (3,'validé'),
+     (4,'confirmé');
      """
-    ### DECOMENTER CETTE LIGNE
-    # mycursor.execute(sql)
+    mycursor.execute(sql)
 
     sql = """ 
     CREATE TABLE gant (
@@ -147,7 +149,7 @@ def fct_fixtures_load():
                  """
     ### DECOMENTER CETTE LIGNE
     # mycursor.execute(sql)
-    
+
     sql = """ 
     CREATE TABLE ligne_commande(
      id_gant INT,
