@@ -6,6 +6,7 @@ from flask import Flask, request, render_template, redirect, abort, flash, sessi
 from connexion_db import get_db
 
 client_article = Blueprint('client_article', __name__,
+
                         template_folder='templates')
 
 @client_article.route('/client/index')
