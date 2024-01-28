@@ -34,9 +34,9 @@ def get_db():
     if 'db' not in g:
         g.db =  pymysql.connect(
             host=("localhost"),                # à modifier
-            user=("drg0n"),               # à modifier
-            password=("2302"),        # à modifier
-            database=("BDD_drg0n"),
+            user=("mbensmai"),               # à modifier
+            password=("mdp"),        # à modifier
+            database=("BDD_mbensmai"),
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor
         )
