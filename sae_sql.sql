@@ -122,3 +122,39 @@ INSERT INTO utilisateur(id_utilisateur,login,email,password,role,nom) VALUES
 (3,'client2','client2@client2.fr',
     'sha256$MjhdGuDELhI82lKY$2161be4a68a9f236a27781a7f981a531d11fdc50e4112d912a7754de2dfa0422',
     'ROLE_client','client2');
+
+INSERT INTO etat(id_etat, libelle) VALUES 
+(1,'en attente'),
+(2,'expédié'),
+(3,'validé'),
+(4,'confirmé');
+
+-- JEU DE TESTS :
+
+SELECT gant.id_gant, gant.nom_gant, gant.couleur, gant.prix_gant, taille.taille_us, type_gant.nom_type_gant
+FROM gant
+JOIN taille ON gant.taille_id = taille.id_taille
+JOIN type_gant ON gant.type_gant_id = type_gant.id_type_gant
+WHERE type_gant.nom_type_gant = 'Mitaine';
+
+
+SELECT gant.id_gant, gant.nom_gant, gant.couleur, gant.prix_gant, taille.taille_us, type_gant.nom_type_gant
+FROM gant
+JOIN taille ON gant.taille_id = taille.id_taille
+JOIN type_gant ON gant.type_gant_id = type_gant.id_type_gant
+ORDER BY taille.num_taille_fr DESC;
+
+
+SELECT type_gant.nom_type_gant, COUNT(gant.id_gant) AS nombre_gants
+FROM gant
+JOIN type_gant ON gant.type_gant_id = type_gant.id_type_gant
+GROUP BY type_gant.nom_type_gant;
+
+
+SELECT taille.taille_us, COUNT(gant.id_gant) AS nombre_gants
+FROM gant
+JOIN taille ON gant.taille_id = taille.id_taille
+GROUP BY taille.taille_us;
+
+SELECT id_utilisateur, nom, email
+FROM utilisateur;
