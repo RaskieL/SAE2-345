@@ -7,6 +7,7 @@ CREATE TABLE utilisateur(
    nom VARCHAR(255),
    password VARCHAR(255),
    role VARCHAR(255),
+   est_actif VARCHAR(255),
    PRIMARY KEY(id_utilisateur)
 );
 
@@ -111,3 +112,8 @@ INSERT INTO gant (nom_gant, poids, couleur, prix_gant, taille_id, type_gant_id, 
     ('Gant gratte-chat', 80, 'Bleu', 3.49, 5, 7, 'Amazon', 'Fousenuk', 'chat.png'),
     ('Gants de chevalier', 1500, 'Argent', 819.99, 7, 6, 'ArmStreet', 'ArmStreet', 'chevalier.png'),
     ('Gants d astronaute', 460, 'Blanc', 14999999.99, 6, 7, 'Nasa', 'Nasa', 'astronaute.png');
+
+INSERT INTO utilisateur (login, email, nom, password, role) VALUES
+    ('admin', 'admin@sae.com', 'admin', 'admin', admin),
+    ('client', 'client@sae.com', 'client', 'client', client),
+    ('client2', 'client2@sae.com', 'client2', 'client2', client);
