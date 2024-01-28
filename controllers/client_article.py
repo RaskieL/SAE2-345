@@ -14,17 +14,15 @@ def client_article_show():                                 # remplace client_ind
     mycursor = get_db().cursor()
     id_client = session['id_user']
 
-    sql = '''SELECT * FROM gant;'''
     list_param = []
-    condition_and = ""
-    # utilisation du filtre
-    sql3=''' prise en compte des commentaires et des notes dans le SQL    '''
 
+    sql = '''SELECT * FROM gant;'''
     mycursor.execute(sql)
     articles = mycursor.fetchall()
 
     # pour le filtre
     sql = '''SELECT * FROM type_gant;'''
+    mycursor.execute(sql)
     types_article = mycursor.fetchall()
 
     articles_panier = []

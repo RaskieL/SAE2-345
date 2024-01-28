@@ -25,18 +25,17 @@
                             <div class="card-body border-dark rounded p-1">
                                 <a href="/client/article/details?id_article={{ article.id_gant }}" >
                                 <h3 class="card-title">
-                                    <span style="color: #0b2e13">{{ article.nom }}</span><br>
-                                    {{ article.prix }}
-                                    €
+                                    <span style="color: #0b2e13">{{ article.nom_gant }}</span><br>
+                                    {{ article.prix_gant }}€
                                 </h3>
                                      {%  if article.image_gant is not none %}
-                                        <img class="card-img-top rounded mx-auto d-block"  style="width:100px;height:100px"  src="{{ url_for('static', filename = 'images/')}}{{ article.image_gant }}"  alt="image  de {{ article.nom }}" >
-                                    {% else %} <img class="card-img-top rounded mx-auto d-block"   style="width:100px;height:100px"   src="{{ url_for('static', filename='images/no_photo.jpeg')}}"  alt="image  de {{ article.nom }}" >
+                                        <img class="card-img-top rounded mx-auto d-block"  style="width:100px;height:100px"  src="{{ url_for('static', filename = 'images/')}}{{ article.image_gant }}"  alt="image de {{ article.nom_gant }}" >
+                                    {% else %} <img class="card-img-top rounded mx-auto d-block"   style="width:100px;height:100px"   src="{{ url_for('static', filename='images/no_photo.jpeg')}}"  alt="image de {{ article.nom_gant }}" >
                                     {% endif %}
                                     <hr>
                                 </a>
                                 <div class="row">
-{# #}                                {% if  article.stock is defined and article.stock != None %}
+{# #}                                {% if article.stock is defined and article.stock != None %}
 {# #}                                    {% if article.stock > 0 %}
                                         <form  action="/client/panier/add"  method="post" class="col-5">
                                             <input type="hidden" name="id_article" value="{{ article.id_gant }}">
