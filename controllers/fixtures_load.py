@@ -145,9 +145,8 @@ def fct_fixtures_load():
      date_achat DATE,
      utilisateur_id INT NOT NULL,
      etat_id INT NOT NULL,
-     id_etat INT NOT NULL,
      PRIMARY KEY(id_commande),
-     FOREIGN KEY(id_etat) REFERENCES etat(id_etat)
+     FOREIGN KEY(etat_id) REFERENCES etat(id_etat)
     ) DEFAULT CHARSET=utf8;  
      """
     mycursor.execute(sql)
