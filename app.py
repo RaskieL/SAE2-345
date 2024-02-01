@@ -25,18 +25,17 @@ app = Flask(__name__)
 app.secret_key = 'le cacatre est un phénomène récurrent lors des séances d\'apprentissage à la modelisation d\'objets avec des outils linguistiques et mathématiques.!'
 
 import os
-# from dotenv import load_dotenv
-# project_folder = os.path.expanduser('~/SAE2-345')
-# load_dotenv(os.path.join(project_folder, '.env'))
+from dotenv import load_dotenv
+project_folder = os.path.expanduser('~/SAE2-345')
+load_dotenv(os.path.join(project_folder, '.env'))
 
-#UTILISER CONNEXION_DB.PY POUR SE CONNECTER A LA DB SINON CA MARCHE PAS
 def get_db():
     if 'db' not in g:
         g.db =  pymysql.connect(
-            host=("localhost"),                # à modifier
-            user=("mbensmai"),               # à modifier
-            password=("mdp"),        # à modifier
-            database=("BDD_mbensmai"),
+            host=("HOST"),                # à modifier
+            user=("LOGIN"),               # à modifier
+            password=("PASSWORD"),        # à modifier
+            database=("DATABASE"),
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor
         )
