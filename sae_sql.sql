@@ -36,8 +36,8 @@ CREATE TABLE gant(
     marque VARCHAR(255),
     image_gant VARCHAR(255),
     PRIMARY KEY (id_gant),
-    FOREIGN KEY (taille_id) REFERENCES taille(id_taille),
-    FOREIGN KEY (type_gant_id) REFERENCES type_gant(id_type_gant)
+    CONSTRAINT fk_gant_taille FOREIGN KEY (taille_id) REFERENCES taille(id_taille),
+    CONSTRAINT fk_gant_type_gant FOREIGN KEY (type_gant_id) REFERENCES type_gant(id_type_gant)
 );
 
 CREATE TABLE etat(
@@ -52,27 +52,27 @@ CREATE TABLE commande(
    utilisateur_id INT NOT NULL,
    etat_id INT NOT NULL,
    PRIMARY KEY(id_commande),
-   FOREIGN KEY(etat_id) REFERENCES etat(id_etat)
+   CONSTRAINT fk_commande_etat FOREIGN KEY (etat_id) REFERENCES etat(id_etat)
 );
 
 CREATE TABLE ligne_panier(
-   id_gant INT,
-   id_utilisateur INT,
+   gant_id INT,
+   utilisateur_id INT,
    quantite INT,
    date_ajout DATE,
-   PRIMARY KEY(id_gant, id_utilisateur),
-   FOREIGN KEY(id_gant) REFERENCES gant(id_gant),
-   FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id_utilisateur)
+   PRIMARY KEY(gant_id, utilisateur_id),
+   CONSTRAINT fk_ligne_panier_gant FOREIGN KEY (gant_id) REFERENCES gant(id_gant),
+   CONSTRAINT fk_ligne_panier_utilisateur FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur)
 );
 
 CREATE TABLE ligne_commande(
-   id_gant INT,
-   id_commande INT,
+   gant_id INT,
+   commande_id INT,
    prix DECIMAL(10,2),
    quantite INT,
-   PRIMARY KEY(id_gant, id_commande),
-   FOREIGN KEY(id_gant) REFERENCES gant(id_gant),
-   FOREIGN KEY(id_commande) REFERENCES commande(id_commande)
+   PRIMARY KEY(gant_id, commande_id),
+   CONSTRAINT fk_ligne_commande_gant FOREIGN KEY (gant_id) REFERENCES gant(id_gant),
+   CONSTRAINT fk_ligne_commande_commande FOREIGN KEY (commande_id) REFERENCES commande(id_commande)
 );
 
 INSERT INTO taille (num_taille_fr, taille_us, tour_de_main) VALUES
