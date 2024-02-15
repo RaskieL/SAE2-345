@@ -124,7 +124,7 @@ def fct_fixtures_load():
      ('Mouffles', 50, 'Noir', 59.99, 6, 3, 'Wedze', 'Wedze', 'mouffle.png'),
      ('PowerGlove', 500, 'Gris', 169.99, 3, 6, 'CDiscount', 'Nintendo', 'powerglove.png'),
      ('Gant de toilette', 20, 'Beige', 1.49, 8, 7, 'Linnea', 'Linnea', 'gant_de_toilette.png'),
-     ('Gant de l infini',  10000, 'Or', 99999999.99, 8, 6, 'Nidavellir', 'Thanos', 'gauntlet_of_infinity.png'),
+     ('Gant de l infini',  10000, 'Or', 999.99, 8, 6, 'Nidavellir', 'Thanos', 'gauntlet_of_infinity.png'),
      ('Mitaines', 20, 'Noir', 24.99, 4, 2, 'Amazon', 'Satinior', 'mitaine.png'),
      ('Gants de cuisine', 100, 'Orange', 6.99, 8, 4, 'Temu', 'Cuisinella', 'cuisine.png'),
      ('Gants de boxe', 285, 'Rose', 23.50, 6, 5, 'Decathlon', 'Decathlon', 'gant_de_boxe.png'),
@@ -135,7 +135,7 @@ def fct_fixtures_load():
      ('Manchettes-mitaines', 30, 'Rose', 7.61, 2, 2, 'Amazon', 'Bienvenu', 'femboy.png'),
      ('Gant gratte-chat', 80, 'Bleu', 3.49, 5, 7, 'Amazon', 'Fousenuk', 'chat.png'),
      ('Gants de chevalier', 1500, 'Argent', 819.99, 7, 6, 'ArmStreet', 'ArmStreet', 'chevalier.png'),
-     ('Gants d astronaute', 460, 'Blanc', 14999999.99, 6, 7, 'Nasa', 'Nasa', 'astronaute.png');
+     ('Gants d astronaute', 460, 'Blanc', 149.99, 6, 7, 'Nasa', 'Nasa', 'astronaute.png');
          """
     mycursor.execute(sql)
 
