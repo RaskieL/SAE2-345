@@ -15,22 +15,26 @@ client_commentaire = Blueprint('client_commentaire', __name__,
 def client_article_details():
     mycursor = get_db().cursor()
     id_article =  request.args.get('id_article', None)
+    print(id_article)
     id_client = session['id_user']
 
     ## partie 4
     # client_historique_add(id_article, id_client)
 
-    sql = '''
+    sql = '''SELECT nom_gant as nom, prix_gant as prix, image_gant as image
+    FROM gant
+    WHERE id_gant = %s;
     '''
-    #mycursor.execute(sql, id_article)
-    #article = mycursor.fetchone()
-    article=[]
+    mycursor.execute(sql, id_article)
+    article = mycursor.fetchone()
+    #article=[]
     commandes_articles=[]
     nb_commentaires=[]
     if article is None:
         abort(404, "pb id article")
+    print(article,'cacacacaca')
+    
     # sql = '''
-    #
     # '''
     # mycursor.execute(sql, ( id_article))
     # commentaires = mycursor.fetchall()
