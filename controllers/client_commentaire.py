@@ -21,7 +21,7 @@ def client_article_details():
     ## partie 4
     # client_historique_add(id_article, id_client)
 
-    sql = '''SELECT nom_gant as nom, prix_gant as prix, image_gant as image
+    sql = '''SELECT nom_gant as nom, prix_gant as prix, image_gant as image, description_gant as description
     FROM gant
     WHERE id_gant = %s;
     '''
@@ -32,7 +32,6 @@ def client_article_details():
     nb_commentaires=[]
     if article is None:
         abort(404, "pb id article")
-    print(article,'cacacacaca')
     
     # sql = '''
     # '''
