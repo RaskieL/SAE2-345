@@ -17,7 +17,11 @@ def client_article_show():                                 # remplace client_ind
 
     list_param = []
 
-    sql = '''SELECT * FROM gant;'''
+    sql = '''SELECT id_gant as id_article,
+    nom_gant as nom,
+    prix_gant as prix,
+    image_gant as image
+    FROM gant;'''
     mycursor.execute(sql)
     articles = mycursor.fetchall()
 
