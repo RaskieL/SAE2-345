@@ -1,0 +1,4 @@
+flask==2.2.2
+python-dotenv
+pymysql
+Werkzeug==2.2.2

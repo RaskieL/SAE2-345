@@ -1,8 +1,12 @@
 #! /usr/bin/python
 # -*- coding:utf-8 -*-
 
+import os
+
 from flask import Flask, request, render_template, redirect, url_for, abort, flash, session, g
 from flask import Blueprint
+from dotenv import load_dotenv
+# 👍😃
 
 from controllers.auth_security import *
 from controllers.fixtures_load import *
@@ -24,8 +28,6 @@ from controllers.client_liste_envies import *
 app = Flask(__name__)
 app.secret_key = 'le cacatre est un phénomène récurrent lors des séances d\'apprentissage à la modelisation d\'objets avec des outils linguistiques et mathématiques.!'
 
-import os
-from dotenv import load_dotenv
 project_folder = os.path.expanduser('~/SAE2-345')
 load_dotenv(os.path.join(project_folder, '.env'))
 
