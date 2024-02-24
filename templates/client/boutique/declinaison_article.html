@@ -28,19 +28,19 @@
                         couleur : <stong style="color:{{ item_declinaison.code_couleur }}">{{ item_declinaison.libelle_couleur }}</stong>
                     {% endif %}
                     {% if item_declinaison.id_taille is defined and  item_declinaison.id_taille > 1 %}
-                      - taille : <span> {{ item_declinaison.libelle_taille }}</span>
+                      - taille : <span> {{ item_declinaison.num_taille_fr }}</span>
                     {% endif %}
                     {% if item_declinaison.stock is defined and item_declinaison.stock != None %}
                         {% if item_declinaison.stock > 0 %}
                             <form  action="/client/panier/add"  method="post" class="col-2">
-                                 <input type="radio" name="id_declinaison_article" value="{{ item_declinaison.id_declinaison_article }}" required>
+                                 <input type="radio" name="id_declinaison" value="{{ item_declinaison.id_declinaison }}" required>
                                     <small class="text-muted">Stock restant : {{ item_declinaison.stock }}</small>
                                  <div class="input-group">
                                     <button class="btn  btn-success"  id="button-addon1">
                                             <i class="bi bi-cart"></i>
                                         <i class="fas fa-shopping-cart"></i>Ajouter
                                     </button>
-                                        <input type="number" id="input-{{ item_declinaison.id_declinaison_article }}" step="1" min="0" max="{{ item_declinaison.stock }}" class="form-control col-2" value="1" name="quantite"  aria-describedby="button-addon1">
+                                        <input type="number" id="input-{{ item_declinaison.id_declinaison }}" step="1" min="0" max="{{ item_declinaison.stock }}" class="form-control col-2" value="1" name="quantite"  aria-describedby="button-addon1">
                                  </div>
                             </form>
                        {% else %}

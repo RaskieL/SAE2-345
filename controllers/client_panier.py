@@ -18,7 +18,7 @@ def client_panier_add():
     # ---------
     print(id_article)
     if id_article is not None and id_article != "":
-        sql = '''SELECT * FROM declinaison WHERE declinaison.id_gant = %s;'''
+        sql = '''SELECT * FROM declinaison JOIN taille ON taille.id_taille = declinaison.id_taille WHERE declinaison.id_gant = %s;'''
         mycursor.execute(sql,(id_article))
         declinaisons = mycursor.fetchall()
         
@@ -35,9 +35,25 @@ def client_panier_add():
             abort("PROBLEME NOMBRE DE DECLINAISON !!!")
         else:
             # En gros là faut renvoyer sur la page où on choisira la déclinaison à ajouter dans le panier lorsqu'il y en a plusieures
-            sql = ''''''
+            sql = '''SELECT id_gant as id_article, nom_gant as nom, prix_gant as prix, image_gant as image FROM gant WHERE id_gant = %s;'''
+            mycursor.execute(sql, id_article)
+            article = mycursor.fetchone()
+            return render_template('client/boutique/declinaison_article.html'
+                                    , declinaisons=declinaisons
+                                    , quantite=quantite
+                                    , article=article)
     else:
         id_declinaison = request.form.get('id_declinaison',None)
+        sql = '''SELECT gant.nom_gant FROM gant JOIN declinaison ON declinaison.id_gant = gant.id_gant WHERE declinaison.id_declinaison = %s;'''
+        mycursor.execute(sql, (id_declinaison));
+        nom = mycursor.fetchone()
+        sql = '''SELECT * FROM declinaison JOIN taille ON taille.id_taille = declinaison.id_taille WHERE declinaison.id_declinaison = %s;'''
+        mycursor.execute(sql, (id_declinaison))
+        declinaison = mycursor.fetchone()
+        stock = declinaison['stock']
+        prix = declinaison['prix_declinaison']
+
+# exemple du prof pour le truc en haut là
 # ajout dans le panier d'une déclinaison d'un article (si 1 declinaison : immédiat sinon => vu pour faire un choix
     # sql = '''    '''
     # mycursor.execute(sql, (id_article))
