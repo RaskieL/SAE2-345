@@ -17,7 +17,17 @@ def client_panier_add():
     quantite = request.form.get('quantite')
     # ---------
     #id_declinaison_article=request.form.get('id_declinaison_article',None)
-    id_declinaison_article = 1
+    id_declinaison = 1
+    sql = '''SELECT * FROM declinaison WHERE declinaison.id_gant = %s;'''
+    mycursor.execute(sql,(id_article))
+    declinaisons = mycursor.fetchall()
+    if len(declinaisons) == 1:
+        id_declinaison = declinaisons[0]['id_declinaison']
+    elif len(declinaisons) == 0:
+        abort("PROBLEME NOMBRE DE DECLINAISON !!!")
+    else:
+        # En gros là faut renvoyer sur la page où on choisira la déclinaison à ajouter dans le panier
+        sql = ''''''
 
 # ajout dans le panier d'une déclinaison d'un article (si 1 declinaison : immédiat sinon => vu pour faire un choix
     # sql = '''    '''
@@ -37,7 +47,10 @@ def client_panier_add():
     #                                , article=article)
 
 # ajout dans le panier d'un article
-
+# A completer et corriger
+    prix_declinaison = declinaisons[0]['prix_declinaison']
+    sql = '''INSERT INTO ligne_commande(id_declinaison,id) VALUES %s, %s;'''
+    panier_tuple = (id_declinaison, id_client)
 
     return redirect('/client/article/show')
 

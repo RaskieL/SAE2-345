@@ -17,11 +17,14 @@ def client_article_show():                                 # remplace client_ind
 
     list_param = []
 
-    sql = '''SELECT id_gant as id_article,
+    sql = '''SELECT gant.id_gant as id_article,
     nom_gant as nom,
     prix_gant as prix,
-    image_gant as image
-    FROM gant;'''
+    image_gant as image,
+    SUM(declinaison.stock) as stock
+    FROM gant
+    JOIN declinaison ON declinaison.id_gant = gant.id_gant
+    GROUP BY gant.id_gant;'''
     mycursor.execute(sql)
     articles = mycursor.fetchall()
 
