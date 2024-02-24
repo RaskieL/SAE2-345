@@ -2,3 +2,4 @@ connexion_db.py
 .env
 .venv
 __pycache__
+*.pyc
