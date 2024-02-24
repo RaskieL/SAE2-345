@@ -13,29 +13,31 @@ client_panier = Blueprint('client_panier', __name__,
 def client_panier_add():
     mycursor = get_db().cursor()
     id_client = session['id_user']
-    id_article = request.form.get('id_article')
+    id_article = request.form.get('id_article', None)
     quantite = request.form.get('quantite')
     # ---------
-    #id_declinaison_article=request.form.get('id_declinaison_article',None)
-    id_declinaison = 1
-    sql = '''SELECT COUNT(id_declinaison) AS count FROM declinaison WHERE declinaison.id_gant = %s;'''
-    mycursor.execute(sql,(id_article))
-    declinaisons = mycursor.fetchone()
-    print(declinaisons['count'])
+    print(id_article)
+    if id_article is not None and id_article != "":
+        sql = '''SELECT * FROM declinaison WHERE declinaison.id_gant = %s;'''
+        mycursor.execute(sql,(id_article))
+        declinaisons = mycursor.fetchall()
+        
+        #print(len(declinaisons))
 
-    if declinaisons['count'] == 1:
-        id_declinaison = declinaisons[0]['id_declinaison']
-        prix = declinaisons[0]['prix_declinaison']
-        sql = '''SELECT gant.nom_gant FROM gant JOIN declinaison ON declinaison.id_gant = gant.id_gant WHERE declinaison.id_declinaison = %s;'''
-        mycursor.execute(sql, (id_declinaison));
-        nom = mycursor.fetchone()
-        stock = declinaisons[0]['stock']
-    elif declinaisons['count'] == 0:
-        abort("PROBLEME NOMBRE DE DECLINAISON !!!")
+        if len(declinaisons) == 1:
+            id_declinaison = declinaisons[0]['id_declinaison']
+            prix = declinaisons[0]['prix_declinaison']
+            sql = '''SELECT gant.nom_gant FROM gant JOIN declinaison ON declinaison.id_gant = gant.id_gant WHERE declinaison.id_declinaison = %s;'''
+            mycursor.execute(sql, (id_declinaison));
+            nom = mycursor.fetchone()
+            stock = declinaisons[0]['stock']
+        elif len(declinaisons) == 0:
+            abort("PROBLEME NOMBRE DE DECLINAISON !!!")
+        else:
+            # En gros là faut renvoyer sur la page où on choisira la déclinaison à ajouter dans le panier lorsqu'il y en a plusieures
+            sql = ''''''
     else:
-        # En gros là faut renvoyer sur la page où on choisira la déclinaison à ajouter dans le panier lorsqu'il y en a plusieures
-        sql = ''''''
-
+        id_declinaison = request.form.get('id_declinaison',None)
 # ajout dans le panier d'une déclinaison d'un article (si 1 declinaison : immédiat sinon => vu pour faire un choix
     # sql = '''    '''
     # mycursor.execute(sql, (id_article))
