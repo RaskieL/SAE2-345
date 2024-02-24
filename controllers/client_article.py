@@ -33,11 +33,20 @@ def client_article_show():                                 # remplace client_ind
     mycursor.execute(sql)
     types_article = mycursor.fetchall()
 
-    articles_panier = []
+    # pour le panier
+    sql = '''SELECT * FROM ligne_panier WHERE id_utilisateur = %s;'''
+    mycursor.execute(sql, (id_client))
+    articles_panier = mycursor.fetchall()
+    print("article ??")
+    for article in articles_panier:
+        print(article)
 
     if len(articles_panier) >= 1:
-        sql = ''' calcul du prix total du panier '''
+        #sql = '''SELECT SUM(declinaison.prix_declinaison) FROM ligne_panier WHERE ligne_panier.id_utilisateur = %s JOIN declinaison ON ligne_panier.id_declinaison = declinaison.id_declinaison GROUP BY ligne_panier.id_declinaison;'''
+        #mycursor.execute(sql, id_client)
         prix_total = None
+        #print("prix ??")
+        #print(prix_total)
     else:
         prix_total = None
     return render_template('client/boutique/panier_article.html'
