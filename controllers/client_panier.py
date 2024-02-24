@@ -16,7 +16,6 @@ def client_panier_add():
     id_article = request.form.get('id_article', None)
     quantite = request.form.get('quantite')
     # ---------
-    print(id_article)
     if id_article is not None and id_article != "":
         sql = '''SELECT * FROM declinaison JOIN taille ON taille.id_taille = declinaison.id_taille WHERE declinaison.id_gant = %s;'''
         mycursor.execute(sql,(id_article))
@@ -76,7 +75,6 @@ def client_panier_add():
     sql = '''SELECT COUNT(*) AS count FROM ligne_panier WHERE id_declinaison = %s AND id_utilisateur = %s'''
     mycursor.execute(sql, (id_declinaison,id_client))
     linealreadyexists = mycursor.fetchone()
-    print(str(linealreadyexists['count']))
     if linealreadyexists['count'] == 0:
         sql = '''INSERT INTO ligne_panier VALUES (%s, %s, %s, %s, %s, %s);'''
         panier_tuple = (id_declinaison, id_client, quantite, prix, nom['nom_gant'], str(int(stock)-int(quantite)))

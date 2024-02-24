@@ -37,9 +37,6 @@ def client_article_show():                                 # remplace client_ind
     sql = '''SELECT * FROM ligne_panier WHERE id_utilisateur = %s;'''
     mycursor.execute(sql, (id_client))
     articles_panier = mycursor.fetchall()
-    print("article ??")
-    for article in articles_panier:
-        print(article)
 
     if len(articles_panier) >= 1:
         #sql = '''SELECT SUM(declinaison.prix_declinaison) FROM ligne_panier WHERE ligne_panier.id_utilisateur = %s JOIN declinaison ON ligne_panier.id_declinaison = declinaison.id_declinaison GROUP BY ligne_panier.id_declinaison;'''
