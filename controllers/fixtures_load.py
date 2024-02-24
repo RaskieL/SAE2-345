@@ -66,7 +66,7 @@ def fct_fixtures_load():
         image_gant VARCHAR(255),
         id_type_gant INT NOT NULL,
         PRIMARY KEY(id_gant),
-        FOREIGN KEY(id_type_gant) REFERENCES type_gant(id_type_gant)
+        CONSTRAINT fk_gant_type_gant FOREIGN KEY(id_type_gant) REFERENCES type_gant(id_type_gant)
     )  DEFAULT CHARSET utf8;
     """
     mycursor.execute(sql)
@@ -80,9 +80,9 @@ def fct_fixtures_load():
         id_taille INT NOT NULL,
         id_gant INT NOT NULL,
         PRIMARY KEY(id_declinaison),
-        FOREIGN KEY(id_couleur) REFERENCES couleur(id_couleur),
-        FOREIGN KEY(id_taille) REFERENCES taille(id_taille),
-        FOREIGN KEY(id_gant) REFERENCES gant(id_gant)
+        CONSTRAINT fk_declinaison_couleur FOREIGN KEY(id_couleur) REFERENCES couleur(id_couleur),
+        CONSTRAINT fk_declinaison_taille FOREIGN KEY(id_taille) REFERENCES taille(id_taille),
+        CONSTRAINT fk_declinaison_gant FOREIGN KEY(id_gant) REFERENCES gant(id_gant)
     )  DEFAULT CHARSET utf8;
     """
     mycursor.execute(sql)
@@ -110,7 +110,7 @@ def fct_fixtures_load():
         date_utilisation DATE,
         id_utilisateur INT NOT NULL,
         PRIMARY KEY(id_adresse),
-        FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id_utilisateur)
+        CONSTRAINT fk_adresse_utilisateur FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id_utilisateur)
     )  DEFAULT CHARSET utf8;
     """
     mycursor.execute(sql)
@@ -124,10 +124,10 @@ def fct_fixtures_load():
         id_adresse_1 INT NOT NULL,
         id_utilisateur INT NOT NULL,
         PRIMARY KEY(id_commande),
-        FOREIGN KEY(id_etat) REFERENCES etat(id_etat),
-        FOREIGN KEY(id_adresse) REFERENCES adresse(id_adresse),
-        FOREIGN KEY(id_adresse_1) REFERENCES adresse(id_adresse),
-        FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id_utilisateur)
+        CONSTRAINT fk_commande_etat FOREIGN KEY(id_etat) REFERENCES etat(id_etat),
+        CONSTRAINT fk_commande_adresse FOREIGN KEY(id_adresse) REFERENCES adresse(id_adresse),
+        CONSTRAINT fk_commande_adresse1 FOREIGN KEY(id_adresse_1) REFERENCES adresse(id_adresse),
+        CONSTRAINT fk_commande_utilisateur FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id_utilisateur)
     )  DEFAULT CHARSET utf8;
     """
     mycursor.execute(sql)
@@ -139,8 +139,8 @@ def fct_fixtures_load():
         quantite INT,
         prix INT,
         PRIMARY KEY(id_declinaison, id_commande),
-        FOREIGN KEY(id_declinaison) REFERENCES declinaison(id_declinaison),
-        FOREIGN KEY(id_commande) REFERENCES commande(id_commande)
+        CONSTRAINT fk_ligne_commande_declinaison FOREIGN KEY(id_declinaison) REFERENCES declinaison(id_declinaison),
+        CONSTRAINT fk_ligne_commande_commande FOREIGN KEY(id_commande) REFERENCES commande(id_commande)
     )  DEFAULT CHARSET utf8;
     """
     mycursor.execute(sql)
@@ -150,8 +150,8 @@ def fct_fixtures_load():
         id_declinaison INT,
         id_utilisateur INT,
         PRIMARY KEY(id_declinaison, id_utilisateur),
-        FOREIGN KEY(id_declinaison) REFERENCES declinaison(id_declinaison),
-        FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id_utilisateur)
+        CONSTRAINT fk_ligne_panier_declinaison FOREIGN KEY(id_declinaison) REFERENCES declinaison(id_declinaison),
+        CONSTRAINT fk_ligne_panier_utilisateur FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id_utilisateur)
     ) DEFAULT CHARSET utf8;
     """
     mycursor.execute(sql)
@@ -174,8 +174,8 @@ def fct_fixtures_load():
         id_utilisateur INT,
         date_consultation VARCHAR(255),
         PRIMARY KEY(id_gant, id_utilisateur, date_consultation),
-        FOREIGN KEY(id_gant) REFERENCES gant(id_gant),
-        FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id_utilisateur)
+        CONSTRAINT fk_historique_gant FOREIGN KEY(id_gant) REFERENCES gant(id_gant),
+        CONSTRAINT fk_historique_utilisateur FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id_utilisateur)
     )  DEFAULT CHARSET utf8;
     """
     mycursor.execute(sql)
@@ -188,8 +188,8 @@ def fct_fixtures_load():
         commentaire VARCHAR(255),
         valider BIT,
         PRIMARY KEY(id_gant, id_utilisateur, date_publication),
-        FOREIGN KEY(id_gant) REFERENCES gant(id_gant),
-        FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id_utilisateur)
+        CONSTRAINT fk_commentaire_gant FOREIGN KEY(id_gant) REFERENCES gant(id_gant),
+        CONSTRAINT fk_commentaire_utilisateur FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id_utilisateur)
     )  DEFAULT CHARSET utf8;
     """
     mycursor.execute(sql)
@@ -200,8 +200,8 @@ def fct_fixtures_load():
         id_utilisateur INT,
         date_update DATE,
         PRIMARY KEY(id_gant, id_utilisateur, date_update),
-        FOREIGN KEY(id_gant) REFERENCES gant(id_gant),
-        FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id_utilisateur)
+        CONSTRAINT fk_liste_envie_gant FOREIGN KEY(id_gant) REFERENCES gant(id_gant),
+        CONSTRAINT fk_liste_envie_utilisateur FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id_utilisateur)
     )  DEFAULT CHARSET utf8;
     """
     mycursor.execute(sql)
