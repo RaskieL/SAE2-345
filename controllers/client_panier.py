@@ -78,7 +78,6 @@ def client_panier_add():
     if linealreadyexists['count'] == 0:
         sql = '''INSERT INTO ligne_panier VALUES (%s, %s, %s, %s, %s, %s);'''
         panier_tuple = (id_declinaison, id_client, quantite, prix, nom['nom_gant'], str(int(stock)-int(quantite)))
-        print("id decli: " + str(id_declinaison) + " id client: " + str(id_client) + " quantite: "+ str(quantite) + " prix: " + str(prix) + " nom: " + nom['nom_gant'])
         mycursor.execute(sql, panier_tuple)
         get_db().commit()
     else:

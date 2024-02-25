@@ -35,14 +35,9 @@
             </table>
                 <br>
                 <div style="color: brown">
-                <strong>adresse livraison : </strong>{{ commande_adresses.nom_livraison }} {{ commande_adresses.rue_livraison }} {{ commande_adresses.code_postal_livraison }} {{ commande_adresses.ville_livraison }}
+                <strong>adresse livraison : </strong>{{ commande_adresse_livraison.nom }} {{ commande_adresse_livraison.rue }} {{ commande_adresse_livraison.code_postal }} {{ commande_adresse_livraison.ville }}
                 <br>
-                <strong>adresse facturation : </strong>
-                {% if commande_adresses.adresse_identique == 'adresse_identique' %}
-                    adresse identique
-                {% else %}
-                    {{ commande_adresses.nom_facturation }} {{ commande_adresses.rue_facturation }} {{ commande_adresses.code_postal_facturation }} {{ commande_adresses.ville_facturation }}
-                {% endif %}
+                <strong>adresse facturation : </strong>{{ commande_adresse_facturation.nom }} {{ commande_adresse_facturation.rue }} {{ commande_adresse_facturation.code_postal }} {{ commande_adresse_facturation.ville }}
                 </div>
             <hr>
         {% endif %}

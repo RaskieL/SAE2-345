@@ -84,6 +84,8 @@ CREATE TABLE commande(
    id_adresse INT NOT NULL,
    id_adresse_1 INT NOT NULL,
    id_utilisateur INT NOT NULL,
+   nbr_articles INT,
+   prix_total DECIMAL(10,2),
    PRIMARY KEY(id_commande),
    FOREIGN KEY(id_etat) REFERENCES etat(id_etat),
    FOREIGN KEY(id_adresse) REFERENCES adresse(id_adresse),
