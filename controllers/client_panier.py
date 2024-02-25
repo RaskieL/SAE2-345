@@ -154,11 +154,38 @@ def client_panier_filtre():
     filter_types = request.form.getlist('filter_types', None)
     # test des variables puis
     # mise en session des variables
+    if filter_word or filter_word == "":
+        if len(filter_word) > 1:
+            if filter_word.isalpha():
+                session['filter_word'] = filter_word
+            else:
+                flash(u'Votre mot recherché doit uniquement être composé de lettres')
+        else:
+            if len(filter_word) == 1:
+                flash(u'Votre mot recherché doit être composé de au moins 2 lettres')
+            else:
+                session.pop('filter_word', None)
+    if filter_prix_min or filter_prix_max:
+        if filter_prix_min.isdecimal() and filter_prix_max.isdecimal():
+            if int(filter_prix_min) < int(filter_prix_max):
+                session['filter_prix_min'] = filter_prix_min
+                session['filter_prix_max'] = filter_prix_max
+            else:
+                flash(u'Le prix mini doit être inférieur au prix maxi')
+        else:
+            flash(u'Les filtres de prix doivent être des numériques')
+    if filter_types and filter_types != []:
+        session['filter_types'] = filter_types
+
+    print(filter_types)
     return redirect('/client/article/show')
 
 
 @client_panier.route('/client/panier/filtre/suppr', methods=['POST'])
 def client_panier_filtre_suppr():
-    # suppression  des variables en session
+    session.pop('filter_word', None)
+    session.pop('filter_prix_min', None)
+    session.pop('filter_prix_max', None)
+    session.pop('filter_types', None)
     print("suppr filtre")
     return redirect('/client/article/show')

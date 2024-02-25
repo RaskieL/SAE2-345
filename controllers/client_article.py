@@ -17,19 +17,43 @@ def client_article_show():                                 # remplace client_ind
 
     list_param = []
 
-    sql = '''SELECT gant.id_gant as id_article,
+    # pour le filtre
+    condition_and = ""
+    sql = '''SELECT * FROM type_gant;'''
+    sql2 = '''SELECT gant.id_gant as id_article,
     nom_gant as nom,
     prix_gant as prix,
     image_gant as image,
     SUM(declinaison.stock) as stock
     FROM gant
-    JOIN declinaison ON declinaison.id_gant = gant.id_gant
-    GROUP BY gant.id_gant;'''
-    mycursor.execute(sql)
-    articles = mycursor.fetchall()
+    JOIN declinaison ON declinaison.id_gant = gant.id_gant'''
 
-    # pour le filtre
-    sql = '''SELECT * FROM type_gant;'''
+    if "filter_word" in session or "filter_prix_min" in session or "filter_prix_max" in session or "filter_types" in session:
+        sql2 += " WHERE "
+    if "filter_word" in session:
+        sql2 += "gant.nom_gant LIKE %s"
+        recherche = "%" +session["filter_word"] + "%"
+        list_param.append(recherche)
+        condition_and = " AND "
+    if "filter_prix_min" in session or "filter_prix_max" in session:
+        sql2 += condition_and + "gant.prix_gant BETWEEN %s AND %s "
+        list_param.append(session["filter_prix_min"])
+        list_param.append(session["filter_prix_max"])
+        condition_and = " AND "
+    if "filter_types" in session:
+        sql2 += condition_and + "("
+        last_item = session["filter_types"][-1]
+        for type in session["filter_types"]:
+            sql2 += "gant.id_type_gant = %s "
+            if type != last_item:
+                sql2 += " OR "
+            list_param.append(type)
+        sql2 += ")"
+    sql2 += " GROUP BY gant.id_gant;"
+    tuple_sql = tuple(list_param)
+    mycursor.execute(sql2, tuple_sql)
+    print(sql2)
+    articles = mycursor.fetchall()
     mycursor.execute(sql)
     types_article = mycursor.fetchall()
 
