@@ -65,6 +65,11 @@ def client_commande_add():
     id_commande = mycursor.fetchone()
     # numéro de la dernière commande
     for item in items_ligne_panier:
+        sql = '''SELECT quantite FROM ligne_panier WHERE id_declinaison = %s AND id_utilisateur = %s;'''
+        mycursor.execute(sql, (item['id_declinaison'], item['id_utilisateur']))
+        qtCommandee = mycursor.fetchone()['quantite']
+        sql = '''UPDATE declinaison SET stock = stock - %s WHERE id_declinaison = %s;'''
+        mycursor.execute(sql, (qtCommandee ,item['id_declinaison']))
         sql = '''DELETE FROM ligne_panier WHERE id_declinaison = %s AND id_utilisateur = %s;'''
         mycursor.execute(sql, (item['id_declinaison'], item['id_utilisateur']))
         sql =  '''INSERT INTO ligne_commande (id_declinaison, id_commande, quantite, prix) VALUES (%s, %s, %s, %s);'''
