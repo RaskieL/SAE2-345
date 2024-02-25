@@ -10,24 +10,24 @@
                 <tbody>
                         {% for ligne in articles_commande %}
                             <tr>
-                                <td>{{ ligne.nom }}
+                                <td>{{ ligne.nom_gant }}
                                 {% if ligne.nb_declinaisons is defined and ligne.nb_declinaisons > 1 %}
                                     <span style="color:rgba(255,197,197,0.6);"> ( {{ ligne.nb_declinaisons }} declinaisons )</span>
                                     <span style="color:#6dcea2">
                                     {% if ligne.couleur_id != 1 %}
-                                        {{ ligne.libelle_couleur }} 
+                                        {{ ligne.libelle_couleur }}
                                     {% endif %}
                                     </span>
                                     <span  style="color:#d941c2">
                                     {% if ligne.taille_id != 1 %}
-                                        {{ ligne.libelle_taille }} 
+                                        {{ ligne.libelle_taille }}
                                     {% endif %}
                                     </span>
                                 {% endif %}
                                 </td>
                                 <td>{{ ligne.quantite }}</td>
                                 <td>{{ ligne.prix }} €</td>
-                                <td>{{ ligne.prix_ligne }} €  </td>
+                                <td>{{ ligne.prix*ligne.quantite }} €  </td>
                             </tr>
                         {% endfor %}
 
@@ -64,18 +64,13 @@
                         </thead>
                         <tbody>
                         {% for commande in commandes %}
-                            <tr id="" {% if commande.etat_id == 1 %} style="background: #FFD600; font-weight: bold;" {% endif %}>
+                            <tr id="" {% if commande.id_etat == 1 %} style="background: #FFD600; font-weight: bold;" {% endif %}>
                                 <td>{{ commande.date_achat.strftime('%d-%m-%Y') }}</td>
                                 <td> {{ commande.nbr_articles }} </td>
-                                <td>
-                                    {{ "{:,.2f} €".format(commande.prix_total) }}
-                                </td>
+                                <td>{{ commande.prix_total*commande.nbr_articles }} €</td>
                                 <td style="text-align: center;">
-                                    {% if commande.etat_id == 1 %} <div style="background-color: #ba8b00; padding: 5px;">
-                                     {{ commande.libelle }}
-                                    </div>
-                                    {% else %} <div style="background-color: #34ce57; padding: 5px;">
-                                        {{ commande.libelle }} </div>
+                                    {% if commande.id_etat == 1 %} <div style="background-color: #ba8b00; padding: 5px;">en cours de traitement</div>
+                                    {% else %} <div style="background-color: #34ce57; padding: 5px;">expédié</div>
                                     {% endif %}
                                 </td>
                                 <td style="text-align: center;">

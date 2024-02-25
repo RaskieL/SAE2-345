@@ -44,18 +44,24 @@ def valid_add_declinaison_article():
 def edit_declinaison_article():
     id_declinaison_article = request.args.get('id_declinaison_article')
     mycursor = get_db().cursor()
-    declinaison_article=[]
-    couleurs=None
-    tailles=None
-    d_taille_uniq=None
-    d_couleur_uniq=None
-    return render_template('admin/article/edit_declinaison_article.html'
-                           , tailles=tailles
-                           , couleurs=couleurs
-                           , declinaison_article=declinaison_article
-                           , d_taille_uniq=d_taille_uniq
-                           , d_couleur_uniq=d_couleur_uniq
-                           )
+    sql = '''
+        SELECT *
+        FROM declinaison
+        WHERE id_declinaison = %s
+    '''
+    mycursor.execute(sql,(id_declinaison_article,))
+    declinaison_article = mycursor.fetchall()
+    article = []
+    sql_article = '''
+        SELECT *
+        FROM gant
+        WHERE id_gant = %s
+    '''
+    id_gant = 1
+    print(declinaison_article)
+    mycursor.execute(sql_article,(id_gant,))
+    article = mycursor.fetchall()
+    return render_template('admin/article/edit_declinaison_article.html', declinaison_article=declinaison_article, article=article)
 
 
 @admin_declinaison_article.route('/admin/declinaison_article/edit', methods=['POST'])
@@ -65,7 +71,15 @@ def valid_edit_declinaison_article():
     stock = request.form.get('stock','')
     taille_id = request.form.get('id_taille','')
     couleur_id = request.form.get('id_couleur','')
+    tuple_req = (stock, id_declinaison_article)
+    sql = '''
+        UPDATE declinaison
+        SET stock = %s
+        WHERE id_declinaison = %s
+    '''
     mycursor = get_db().cursor()
+    mycursor.execute(sql, tuple_req)
+    get_db().commit()
 
     message = u'declinaison_article modifié , id:' + str(id_declinaison_article) + '- stock :' + str(stock) + ' - taille_id:' + str(taille_id) + ' - couleur_id:' + str(couleur_id)
     flash(message, 'alert-success')

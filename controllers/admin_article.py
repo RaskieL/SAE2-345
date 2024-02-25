@@ -17,11 +17,37 @@ admin_article = Blueprint('admin_article', __name__,
 @admin_article.route('/admin/article/show')
 def show_article():
     mycursor = get_db().cursor()
-    sql = '''  requête admin_article_1
-    '''
+
+    list_param = []
+
+    sql = '''SELECT gant.id_gant as id_article,
+    nom_gant as nom,
+    prix_gant as prix,
+    image_gant as image,
+    SUM(declinaison.stock) as stock
+    FROM gant
+    JOIN declinaison ON declinaison.id_gant = gant.id_gant
+    GROUP BY gant.id_gant;'''
     mycursor.execute(sql)
     articles = mycursor.fetchall()
-    return render_template('admin/article/show_article.html', articles=articles)
+
+    sql = '''SELECT * FROM type_gant;'''
+    mycursor.execute(sql)
+    types_article = mycursor.fetchall()
+
+    declinaisons = []
+
+    for article in articles:
+        article_id = article['id_article']
+        sql_declinaisons = '''SELECT id_declinaison, id_couleur, id_taille
+                              FROM declinaison
+                              WHERE id_gant = %s;'''
+        mycursor.execute(sql_declinaisons, (article_id,))
+        declinaison = mycursor.fetchone()
+        declinaisons.append(declinaison)
+    print(declinaisons)
+
+    return render_template('admin/article/show_article.html', articles=articles, types_article=types_article, declinaisons=declinaisons)
 
 
 @admin_article.route('/admin/article/add', methods=['GET'])
@@ -102,27 +128,41 @@ def edit_article():
     id_article=request.args.get('id_article')
     mycursor = get_db().cursor()
     sql = '''
-    requête admin_article_6    
+        SELECT *
+        FROM gant
+        WHERE id_gant = %s
     '''
     mycursor.execute(sql, id_article)
     article = mycursor.fetchone()
-    print(article)
     sql = '''
-    requête admin_article_7
+        SELECT *
+        FROM type_gant
     '''
     mycursor.execute(sql)
     types_article = mycursor.fetchall()
 
-    # sql = '''
-    # requête admin_article_6
-    # '''
-    # mycursor.execute(sql, id_article)
-    # declinaisons_article = mycursor.fetchall()
+    sql = '''
+        SELECT d.id_declinaison, d.stock, d.prix_declinaison, c.libelle_couleur, t.num_taille_fr
+        FROM declinaison d
+        JOIN couleur c ON d.id_couleur = c.id_couleur
+        JOIN taille t ON d.id_taille = t.id_taille
+        WHERE d.id_gant = %s
+    '''
+    mycursor.execute(sql, id_article)
+    declinaison_article = mycursor.fetchall()
+
+    sql_couleur = '''
+        SELECT *
+        FROM couleur
+    '''
+    mycursor.execute(sql_couleur)
+    couleurs = mycursor.fetchall()
 
     return render_template('admin/article/edit_article.html'
                            ,article=article
                            ,types_article=types_article
-                         #  ,declinaisons_article=declinaisons_article
+                           ,declinaisons_article=declinaison_article
+                           ,couleurs=couleurs
                            )
 
 

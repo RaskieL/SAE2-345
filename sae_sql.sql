@@ -95,7 +95,7 @@ CREATE TABLE ligne_commande(
    id_declinaison INT,
    id_commande INT,
    quantite INT,
-   prix INT,
+   prix DECIMAL(10, 2),
    PRIMARY KEY(id_declinaison, id_commande),
    FOREIGN KEY(id_declinaison) REFERENCES declinaison(id_declinaison),
    FOREIGN KEY(id_commande) REFERENCES commande(id_commande)
@@ -232,8 +232,24 @@ INSERT INTO utilisateur(id_utilisateur, login, email, password, role, nom) VALUE
     'sha256$MjhdGuDELhI82lKY$2161be4a68a9f236a27781a7f981a531d11fdc50e4112d912a7754de2dfa0422',
     'ROLE_client','client2');
 
-INSERT INTO etat(id_etat, libelle) VALUES 
+INSERT INTO etat(id_etat, libelle) VALUES
 (1,'en attente'),
 (2,'expédié'),
 (3,'validé'),
 (4,'confirmé');
+
+INSERT INTO adresse(nom, rue, code_postal, ville, date_utilisation, id_utilisateur)
+VALUES
+    ('Adresse Client', '123 Rue de la Ville', 75001, 'Paris', '2024-02-24', 2),
+    ('Adresse Client2', '456 Rue de la Ville', 75002, 'Paris', '2024-02-25', 3);
+
+INSERT INTO commande(date_achat, id_etat, id_adresse, id_adresse_1, id_utilisateur)
+VALUES
+    ('2024-02-24', 1, 1, 2, 2),
+    ('2024-02-25', 2, 2, 1, 3);
+
+INSERT INTO ligne_commande(id_declinaison, id_commande, quantite, prix)
+VALUES
+    (3, 1, 10, 169.99),
+    (5, 2, 1, 24.99),
+    (8, 2, 2, 13.98);
