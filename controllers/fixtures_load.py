@@ -123,6 +123,8 @@ def fct_fixtures_load():
         id_adresse INT NOT NULL,
         id_adresse_1 INT NOT NULL,
         id_utilisateur INT NOT NULL,
+        nbr_articles INT,
+        prix_total DECIMAL(10,2),
         PRIMARY KEY(id_commande),
         CONSTRAINT fk_commande_etat FOREIGN KEY(id_etat) REFERENCES etat(id_etat),
         CONSTRAINT fk_commande_adresse FOREIGN KEY(id_adresse) REFERENCES adresse(id_adresse),
@@ -137,7 +139,7 @@ def fct_fixtures_load():
         id_declinaison INT,
         id_commande INT,
         quantite INT,
-        prix INT,
+        prix DECIMAL(10,2),
         PRIMARY KEY(id_declinaison, id_commande),
         CONSTRAINT fk_ligne_commande_declinaison FOREIGN KEY(id_declinaison) REFERENCES declinaison(id_declinaison),
         CONSTRAINT fk_ligne_commande_commande FOREIGN KEY(id_commande) REFERENCES commande(id_commande)
@@ -149,6 +151,10 @@ def fct_fixtures_load():
     CREATE TABLE ligne_panier(
         id_declinaison INT,
         id_utilisateur INT,
+        quantite INT,
+        prix DECIMAL(10,2),
+        nom VARCHAR(255),
+        stock INT,
         PRIMARY KEY(id_declinaison, id_utilisateur),
         CONSTRAINT fk_ligne_panier_declinaison FOREIGN KEY(id_declinaison) REFERENCES declinaison(id_declinaison),
         CONSTRAINT fk_ligne_panier_utilisateur FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id_utilisateur)
@@ -162,8 +168,8 @@ def fct_fixtures_load():
         id_utilisateur INT,
         note VARCHAR(255),
         PRIMARY KEY(id_gant, id_utilisateur),
-        FOREIGN KEY(id_gant) REFERENCES gant(id_gant),
-        FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id_utilisateur)
+        CONSTRAINT fk_note_gant FOREIGN KEY(id_gant) REFERENCES gant(id_gant),
+        CONSTRAINT fk_note_utilisateur FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id_utilisateur)
     ) DEFAULT CHARSET utf8;
     """
     mycursor.execute(sql)

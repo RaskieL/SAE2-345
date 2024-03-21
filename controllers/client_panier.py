@@ -44,7 +44,7 @@ def client_panier_add():
     else:
         id_declinaison = request.form.get('id_declinaison',None)
         sql = '''SELECT gant.nom_gant FROM gant JOIN declinaison ON declinaison.id_gant = gant.id_gant WHERE declinaison.id_declinaison = %s;'''
-        mycursor.execute(sql, (id_declinaison));
+        mycursor.execute(sql, (id_declinaison))
         nom = mycursor.fetchone()
         sql = '''SELECT * FROM declinaison JOIN taille ON taille.id_taille = declinaison.id_taille WHERE declinaison.id_declinaison = %s;'''
         mycursor.execute(sql, (id_declinaison))
@@ -72,7 +72,7 @@ def client_panier_add():
 
 # ajout dans le panier d'un article
 # A completer et corriger
-    sql = '''SELECT COUNT(*) AS count FROM ligne_panier WHERE id_declinaison = %s AND id_utilisateur = %s'''
+    sql = '''SELECT COUNT(id_declinaison) AS count FROM ligne_panier WHERE id_declinaison = %s AND id_utilisateur = %s'''
     mycursor.execute(sql, (id_declinaison,id_client))
     linealreadyexists = mycursor.fetchone()
     if linealreadyexists['count'] == 0:
