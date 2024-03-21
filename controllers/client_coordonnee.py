@@ -9,6 +9,7 @@ client_coordonnee = Blueprint('client_coordonnee', __name__,
                         template_folder='templates')
 
 
+
 @client_coordonnee.route('/client/coordonnee/show')
 def client_coordonnee_show():
     mycursor = get_db().cursor()
@@ -19,13 +20,31 @@ def client_coordonnee_show():
     sql = '''SELECT * FROM adresse WHERE id_utilisateur = %s;'''
     mycursor.execute(sql ,(id_client))
     adresses = mycursor.fetchall()
-    sql = '''SELECT COUNT(id_adresse) as count FROM adresse WHERE id_utilisateur = %s;'''
+    sql = '''SELECT COUNT(id_adresse) as count FROM adresse WHERE id_utilisateur = %s AND etat = 'VALIDE';'''
     mycursor.execute(sql, (id_client))
     nb_adresses = mycursor.fetchone()['count']
+    if nb_adresses == 4:
+        flash(u'Vous avez atteint la limite de 4 adresse maxium', 'alert-warning')
+
+    sql = '''SELECT * FROM adresse JOIN adresse_favorite ON adresse_favorite.id_utilisateur = %s'''
+    mycursor.execute(sql, (id_client))
+    adresse_fav = mycursor.fetchone()
+
+    if adresse_fav is None:
+        sql = '''SELECT * FROM adresse WHERE id_utilisateur = %s AND etat = 'VALIDE' ORDER BY nb_commande DESC;'''
+        mycursor.execute(sql, (id_client))
+        adresse_fav = mycursor.fetchone()
+        if adresse_fav is not None:
+            new_adresse_fav = adresse_fav['id_adresse']
+            sql = '''INSERT INTO adresse_favorite VALUES(%s,%s);'''
+            mycursor.execute(sql, (id_client, new_adresse_fav))
+        get_db().commit()
+
     return render_template('client/coordonnee/show_coordonnee.html'
                            , utilisateur=utilisateur
                            , adresses=adresses
                            , nb_adresses=nb_adresses
+                           , adresse_fav = adresse_fav
                            )
 
 @client_coordonnee.route('/client/coordonnee/edit', methods=['GET'])
@@ -64,17 +83,38 @@ def client_coordonnee_edit_valide():
     sql = '''UPDATE utilisateur SET nom = %s, login = %s, email = %s WHERE id_utilisateur = %s;'''
     mycursor.execute(sql, (nom,login,email,id_client))
     get_db().commit()
+    
     return redirect('/client/coordonnee/show')
 
-
+# REGLER PROBLEME QUAND INVALIDE ADRESSE FAV FAUT REMPLACER PAR AUTRE AVEC LE PLUS DE CMMANDES
 @client_coordonnee.route('/client/coordonnee/delete_adresse',methods=['POST'])
 def client_coordonnee_delete_adresse():
     mycursor = get_db().cursor()
     id_client = session['id_user']
     id_adresse= request.form.get('id_adresse')
 
-    sql = '''DELETE FROM adresse WHERE id_adresse = %s;'''
+    sql = '''SELECT nb_commande FROM adresse WHERE id_adresse = %s;'''
     mycursor.execute(sql, (id_adresse))
+    nb_commande = mycursor.fetchone()['nb_commande']
+
+    sql = '''DELETE FROM adresse_favorite WHERE id_utilisateur = %s;'''
+    mycursor.execute(sql, (id_client))
+    get_db().commit()
+
+    if nb_commande > 0:
+        sql = '''UPDATE adresse SET etat = 'INVALIDE' WHERE id_adresse = %s'''
+        mycursor.execute(sql, (id_adresse))
+    else:
+        sql = '''DELETE FROM adresse WHERE id_adresse = %s;'''
+        mycursor.execute(sql, (id_adresse))
+
+    sql = '''SELECT * FROM adresse WHERE id_utilisateur = %s AND etat = 'VALIDE' ORDER BY nb_commande DESC;'''
+    mycursor.execute(sql, (id_client))
+    new_adresse_fav = mycursor.fetchone()['id_adresse']
+    if new_adresse_fav is not None:
+        sql = '''INSERT INTO adresse_favorite VALUES(%s,%s);'''
+        mycursor.execute(sql, (id_client, new_adresse_fav))
+
     get_db().commit()
 
     return redirect('/client/coordonnee/show')
@@ -101,15 +141,13 @@ def client_coordonnee_add_adresse_valide():
     code_postal = request.form.get('code_postal')
     ville = request.form.get('ville')
 
-    sql = '''SELECT COUNT(id_adresse) AS nbr_adresse FROM adresse WHERE id_utilisateur = %s;'''
+    sql = '''SELECT COUNT(id_adresse) AS nbr_adresse FROM adresse WHERE id_utilisateur = %s AND etat = 'VALIDE';'''
     mycursor.execute(sql, (id_client))
     nbr_adresse = mycursor.fetchone()['nbr_adresse']
 
     if nbr_adresse < 4:
-        sql = '''INSERT INTO adresse (nom, rue, code_postal, ville, id_utilisateur) VALUES (%s,%s,%s,%s,%s);'''
+        sql = '''INSERT INTO adresse (nom, rue, code_postal, ville, id_utilisateur, etat, nb_commande) VALUES (%s,%s,%s,%s,%s, 'VALIDE', 0);'''
         mycursor.execute(sql, (nom, rue, code_postal, ville, id_client))
-    else:
-        flash(u'Vous ne pouvez avoir que 4 adresses au maximum.', 'alert-warning')
 
     get_db().commit()
     return redirect('/client/coordonnee/show')
@@ -143,8 +181,18 @@ def client_coordonnee_edit_adresse_valide():
     ville = request.form.get('ville')
     id_adresse = request.form.get('id_adresse')
 
-    sql = '''UPDATE adresse SET nom = %s, rue = %s, code_postal = %s, ville = %s WHERE id_adresse = %s'''
-    mycursor.execute(sql, (nom, rue, code_postal, ville, id_adresse))
+    sql = '''SELECT nb_commande FROM adresse WHERE id_adresse = %s;'''
+    mycursor.execute(sql, (id_adresse))
+    nb_commande = mycursor.fetchone()['nb_commande']
+
+    if nb_commande == 0:
+        sql = '''UPDATE adresse SET nom = %s, rue = %s, code_postal = %s, ville = %s WHERE id_adresse = %s'''
+        mycursor.execute(sql, (nom, rue, code_postal, ville, id_adresse))
+    else:
+        sql = '''UPDATE adresse SET etat = 'INVALIDE' WHERE id_adresse = %s'''
+        mycursor.execute(sql, (id_adresse))
+        sql = '''INSERT INTO adresse (nom, rue, code_postal, ville, id_utilisateur, etat, nb_commande) VALUES (%s,%s,%s,%s,%s, 'VALIDE', 0);'''
+        mycursor.execute(sql, (nom, rue, code_postal, ville, id_client))
 
     get_db().commit()
     return redirect('/client/coordonnee/show')

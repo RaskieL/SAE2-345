@@ -22,7 +22,42 @@
         </div>
     </div>
     <br>
+    <div style="text-align: center"><h2 >Mon adresse favorite :</h2></div>
+    <div class="border m-auto p-3">
+        <table class="table border">
+            <thead class="thead-dark">
+                <tr>
+                    <th>nom</th>
+                    <th>Rue</th>
+                     <th>Code Postal</th>
+                     <th>Ville</th>
+                     <th>Nb.Commandes</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                    <tr {% if adresse_fav.etat is defined and adresse_fav.etat== 'VALIDE' %} style="color: darkorange"{% endif %}>
 
+                        <td>{{ adresse_fav.nom }}-{{ adresse_fav.etat}}</td>
+                        <td>{{ adresse_fav.rue }}</td>
+                        <td>{{ adresse_fav.code_postal }}</td>
+                        <td>{{ adresse_fav.ville }}</td>
+                        <td>{{ adresse_fav.nb_commande}} commande(s)</td>
+                        <td>
+                            {% if adresse_fav.etat is defined and adresse_fav.etat=='INVALIDE' %}
+                                <span style="color: darkorange">*</span>
+                            {% else %}
+                                <a class="btn btn-primary" href="/client/coordonnee/edit_adresse?id_adresse={{ adresse_fav.id_adresse }}"> Modifier </a>
+                            <form action="/client/coordonnee/delete_adresse" style="display: inline-block;"  method="post">
+                                <input type="hidden"  name="id_adresse" value="{{ adresse_fav.id_adresse }}">
+                                <button class="btn btn-primary" > Supprimer </button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+            </tbody>
+        </table>
+    </div>
     <div style="text-align: center"><h2 >Mes adresses :</h2></div>
     <div class="border m-auto p-3">
         <table class="table border">
@@ -32,19 +67,21 @@
                     <th>Rue</th>
                      <th>Code Postal</th>
                      <th>Ville</th>
+                     <th>Nb.Commandes</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 {% for adresse in adresses %}
-                    <tr {% if adresse.valide is defined and adresse.valide==0 %} style="color: darkorange"{% endif %}>
+                    <tr {% if adresse.etat is defined and adresse.etat== 'VALIDE' %} style="color: darkorange"{% endif %}>
 
-                        <td>{{ adresse.nom }}-{{ adresse.valide}}</td>
+                        <td>{{ adresse.nom }}-{{ adresse.etat}}</td>
                         <td>{{ adresse.rue }}</td>
                         <td>{{ adresse.code_postal }}</td>
                         <td>{{ adresse.ville }}</td>
+                        <td>{{ adresse.nb_commande}} commande(s)</td>
                         <td>
-                            {% if adresse.valide is defined and adresse.valide==0 %}
+                            {% if adresse.etat is defined and adresse.etat=='INVALIDE' %}
                                 <span style="color: darkorange">*</span>
                             {% else %}
                                 <a class="btn btn-primary" href="/client/coordonnee/edit_adresse?id_adresse={{ adresse.id_adresse }}"> Modifier </a>

@@ -24,15 +24,30 @@ def client_commande_valide():
     else:
         prix_total = None
     # etape 2 : selection des adresses
-    sql = '''SELECT * FROM adresse WHERE adresse.id_utilisateur = %s;'''
+    sql = '''SELECT * FROM adresse WHERE adresse.id_utilisateur = %s AND adresse.etat = 'VALIDE';'''
     mycursor.execute(sql, (id_client))
     adresses = mycursor.fetchall()
+
+    sql = '''SELECT * FROM adresse JOIN adresse_favorite ON adresse_favorite.id_utilisateur = %s'''
+    mycursor.execute(sql, (id_client))
+    adresse_fav = mycursor.fetchone()
+
+    if adresse_fav is None:
+        sql = '''SELECT * FROM adresse WHERE id_utilisateur = %s AND etat = 'VALIDE' ORDER BY nb_commande DESC;'''
+        mycursor.execute(sql, (id_client))
+        adresse_fav = mycursor.fetchone()
+        if adresse_fav is not None:
+            new_adresse_fav = adresse_fav['id_adresse']
+            sql = '''INSERT INTO adresse_favorite VALUES(%s,%s);'''
+            mycursor.execute(sql, (id_client, new_adresse_fav))
+        get_db().commit()
+    
     return render_template('client/boutique/panier_validation_adresses.html'
                            , adresses=adresses
                            , articles_panier=articles_panier
                            , prix_total= prix_total
                            , validation=1
-                           #, id_adresse_fav=id_adresse_fav
+                           , id_adresse_fav=adresse_fav['id_adresse']
                            )
 
 
@@ -58,6 +73,9 @@ def client_commande_add():
         mycursor.execute(sql, (1, id_adresse_livraison, id_adresse_livraison, id_client))
     else:
         mycursor.execute(sql, (1, id_adresse_livraison, id_adresse_facturation, id_client))
+    
+    sql = '''UPDATE adresse SET nb_commande = nb_commande+1 WHERE id_adresse = %s OR id_adresse = %s;'''
+    mycursor.execute(sql, (id_adresse_livraison, id_adresse_facturation))
     get_db().commit()
 
     sql = '''SELECT last_insert_id() as last_insert_id'''

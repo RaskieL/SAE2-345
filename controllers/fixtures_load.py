@@ -109,6 +109,7 @@ def fct_fixtures_load():
         ville VARCHAR(255),
         date_utilisation DATE,
         id_utilisateur INT NOT NULL,
+        etat VARCHAR(255),
         PRIMARY KEY(id_adresse),
         CONSTRAINT fk_adresse_utilisateur FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id_utilisateur)
     )  DEFAULT CHARSET utf8;
@@ -315,6 +316,14 @@ def fct_fixtures_load():
         (3,'validé'),
         (4,'confirmé');
      """
+    mycursor.execute(sql)
+
+    sql = """ 
+    INSERT INTO adresse(nom, rue, code_postal, ville, date_utilisation, id_utilisateur, etat, nb_commande)
+    VALUES
+    ('Adresse Client', '123 Rue de la Ville', 75001, 'Paris', '2024-02-24', 2, 'VALIDE', 0),
+    ('Adresse Client2', '456 Rue de la Ville', 75002, 'Paris', '2024-02-25', 3, 'VALIDE', 0);
+    """
     mycursor.execute(sql)
 
     get_db().commit()
