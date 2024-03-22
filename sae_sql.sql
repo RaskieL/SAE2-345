@@ -128,7 +128,7 @@ CREATE TABLE ligne_panier(
 CREATE TABLE note(
    id_gant INT,
    id_utilisateur INT,
-   note VARCHAR(255),
+   note DECIMAL(2, 1),
    PRIMARY KEY(id_gant, id_utilisateur),
    CONSTRAINT fk_note_gant FOREIGN KEY(id_gant) REFERENCES gant(id_gant),
    CONSTRAINT fk_note_utilisateur FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id_utilisateur)
@@ -146,13 +146,14 @@ CREATE TABLE historique(
 CREATE TABLE commentaire(
    id_gant INT,
    id_utilisateur INT,
-   date_publication DATE,
+   date_publication DATETIME,
    commentaire VARCHAR(255),
-   valider BIT,
+   valider BOOLEAN,
    PRIMARY KEY(id_gant, id_utilisateur, date_publication),
    CONSTRAINT fk_commentaire_gant FOREIGN KEY(id_gant) REFERENCES gant(id_gant),
    CONSTRAINT fk_commentaire_utilisateur FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id_utilisateur)
 )DEFAULT CHARSET utf8;
+
 
 CREATE TABLE liste_envie(
    id_gant INT,
@@ -254,3 +255,19 @@ INSERT INTO adresse(nom, rue, code_postal, ville, date_utilisation, id_utilisate
 VALUES
     ('Adresse Client', '123 Rue de la Ville', 75001, 'Paris', '2024-02-24', 2, 'VALIDE', 0),
     ('Adresse Client2', '456 Rue de la Ville', 75002, 'Paris', '2024-02-25', 3, 'VALIDE', 0);
+
+INSERT INTO commande(date_achat, id_etat, id_adresse, id_adresse_1, id_utilisateur)
+VALUES
+    ('2024-02-24', 1, 1, 2, 2),
+    ('2024-02-25', 2, 2, 1, 3);
+
+INSERT INTO ligne_commande(id_declinaison, id_commande, quantite, prix)
+VALUES
+    (3, 1, 10, 169.99),
+    (5, 2, 1, 24.99),
+    (8, 2, 2, 13.98);
+
+INSERT INTO commentaire VALUES (2, 2, "2024-02-25", "Coucou j'adore ce produit", TRUE);
+INSERT INTO commentaire VALUES (2, 3, "2024-02-24", "Je suis moins fan", TRUE);
+
+INSERT INTO note VALUES (2, 2, 4.5);

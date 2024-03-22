@@ -86,13 +86,13 @@
       {% if nb_commentaires.nb_commentaires_total is not defined or nb_commentaires.nb_commentaires_utilisateur is not defined %}
          <strong>NB comment not defined</strong>
                 {% else %}
-            <strong>Nombre de commentaire(s) : {{ nb_commentaires.nb_commentaires_utilisateur }} / 5 </strong><br>
+            <strong>Nombre de commentaire(s) : {{ nb_commentaires.nb_commentaires_utilisateur }} / 3 </strong><br>
             <strong>Nombre de commentaire(s) total :  {{nb_commentaires.nb_commentaires_total }}</strong>
         {% endif %}
       </div>
       {% if commandes_articles.nb_commandes_article is defined and commandes_articles.nb_commandes_article > 0 and
-            ((nb_commentaires.nb_commentaires_utilisateur is defined and nb_commentaires.nb_commentaires_utilisateur <5) or nb_commentaires.nb_commentaires_utilisateur is not defined) %}
-          <form action="/client/commentaire/add"   method="post">
+            ((nb_commentaires.nb_commentaires_utilisateur is defined and nb_commentaires.nb_commentaires_utilisateur < 3) or nb_commentaires.nb_commentaires_utilisateur is not defined) %}
+          <form  action="/client/commentaire/add"   method="post">
                 <div class="col">
                   <label for="input_commentaire" class="form-label">Mettez un commentaire sur cet article : </label>
                      <textarea name="commentaire" class="form-control" aria-label="Votre commentaire" id="input_commentaire"  placeholder="Votre commentaire"></textarea>
@@ -120,6 +120,7 @@
                 <th>nom(pseudo)</th>
                 <th>Commentaires</th>
                 <th></th>
+                <th>Validation</th>
             </tr>
             </thead>
             <tbody>
@@ -127,7 +128,7 @@
                 {% for commentaire in commentaires %}
                     <tr>
                         <td>{{ commentaire.nom }}({{ commentaire.id_utilisateur }})</td>
-                        <td>{% if commentaire.utilisateur_id == 1 %}
+                        <td>{% if commentaire.id_utilisateur == 1 %}
                             <span style="color: red">(réponse de l'administrateur du site (webmaster) ) :</span>
                             {% endif %}
                             {{ commentaire.commentaire }}</td>
@@ -142,6 +143,14 @@
                                       <input type="hidden" name="date_publication" value="{{ commentaire.date_publication }}">
                                       <button class="btn btn-primary" > supprimer </button>
                                   </form>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if commentaire.valider == 1 %}
+                            <span style="color: lightgreen">validé par un modérateur</span>
+                            {% endif %}
+                            {% if commentaire.valider == 0 %}
+                            <span style="color: orange">en attende de validation</span>
                             {% endif %}
                         </td>
                     </tr>

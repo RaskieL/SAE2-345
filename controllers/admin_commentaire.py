@@ -13,10 +13,22 @@ admin_commentaire = Blueprint('admin_commentaire', __name__,
 def admin_article_details():
     mycursor = get_db().cursor()
     id_article =  request.args.get('id_article', None)
-    sql = '''    requête admin_type_article_1    '''
-    commentaires = {}
-    sql = '''   requête admin_type_article_1_bis   '''
-    article = []
+    
+    sql = '''SELECT c.commentaire, u.nom, c.id_utilisateur, c.id_gant AS id_article,  c.date_publication, c.valider
+    FROM commentaire c 
+    INNER JOIN utilisateur u 
+    ON c.id_utilisateur=u.id_utilisateur 
+    WHERE id_gant=%s
+    ORDER BY c.date_publication DESC;'''
+    mycursor.execute(sql, ( id_article))
+    commentaires = mycursor.fetchall()
+    
+    sql = '''SELECT id_gant as id_article, nom_gant as nom, prix_gant as prix, image_gant as image, description_gant as description
+    FROM gant
+    WHERE id_gant = %s;
+    '''
+    mycursor.execute(sql, id_article)
+    article = mycursor.fetchone()
     return render_template('admin/article/show_article_commentaires.html'
                            , commentaires=commentaires
                            , article=article
@@ -28,8 +40,9 @@ def admin_comment_delete():
     id_utilisateur = request.form.get('id_utilisateur', None)
     id_article = request.form.get('id_article', None)
     date_publication = request.form.get('date_publication', None)
-    sql = '''    requête admin_type_article_2   '''
+    sql = '''   DELETE FROM commentaire WHERE id_utilisateur=%s AND id_gant=%s AND date_publication LIKE %s   '''
     tuple_delete=(id_utilisateur,id_article,date_publication)
+    mycursor.execute(sql, tuple_delete)
     get_db().commit()
     return redirect('/admin/article/commentaires?id_article='+id_article)
 
@@ -47,7 +60,9 @@ def admin_comment_add():
     id_article = request.form.get('id_article', None)
     date_publication = request.form.get('date_publication', None)
     commentaire = request.form.get('commentaire', None)
-    sql = '''    requête admin_type_article_3   '''
+    sql = '''   INSERT INTO commentaire VALUES
+    (%s, %s, %s, %s, TRUE)'''
+    mycursor.execute(sql, (id_article, id_utilisateur, date_publication, commentaire))
     get_db().commit()
     return redirect('/admin/article/commentaires?id_article='+id_article)
 
@@ -56,6 +71,9 @@ def admin_comment_add():
 def admin_comment_valider():
     id_article = request.args.get('id_article', None)
     mycursor = get_db().cursor()
-    sql = '''   requête admin_type_article_4   '''
+    sql = '''   UPDATE commentaire
+    SET valider=TRUE
+    WHERE id_gant=%s '''
+    mycursor.execute(sql, (id_article))
     get_db().commit()
     return redirect('/admin/article/commentaires?id_article='+id_article)
