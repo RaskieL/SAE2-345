@@ -90,8 +90,8 @@ def client_comment_add():
     if commentaire == '':
         flash(u'Commentaire non pris en compte', 'alert-warning')
         return redirect('/client/article/details?id_article='+id_article)
-    if commentaire != None and len(commentaire)>0 and len(commentaire) <3 :
-        flash(u'Commentaire avec plus de 2 caractères','alert-warning')              # 
+    if commentaire != None and len(commentaire)>0 and len(commentaire) < 3 :
+        flash(u'Commentaire avec plus de 2 caractères','alert-warning')
         return redirect('/client/article/details?id_article='+id_article)
 
     tuple_insert = (id_article, id_client, commentaire)

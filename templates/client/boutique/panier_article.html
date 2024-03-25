@@ -64,18 +64,20 @@
                                  {% if article.stock > 0 %}
                                     <small class="text-muted">Stock restant : {{ article.stock }}</small>
                                  {% else %}
-                                    <small class="text-muted">article  momentanément indisponible</small>
+                                    <small class="text-muted">article momentanément indisponible</small>
                                  {% endif %}
                                 {% if article.nb_declinaison is defined and article.nb_declinaison != None %}
                                     ({{ article.nb_declinaison }} d.)
                                 {% endif %}
                                 <br>
                             {% endif %}
+                            
                             {% if article.nb_notes is defined %}
                                 {% if article.nb_notes > 0 %}
                                  <a  href="/client/article/details?id_article={{ article.id_article }}" >
-                                    <span style="color: #3A7734"> note : {{  "{:,.1f}".format(article.moy_notes) }}({{ article.nb_notes }})</span>
+                                    <span style="color: #3A7734">{{ article.nb_notes }} note(s) : {{  "{:,.1f}".format(article.moy_notes) }}</span>
                                  </a>
+                                 <br>
                                 {% endif %}
                             {% endif %}
                             {% if article.nb_avis is defined %}

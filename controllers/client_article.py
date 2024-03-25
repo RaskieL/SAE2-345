@@ -20,13 +20,22 @@ def client_article_show():                                 # remplace client_ind
     # pour le filtre
     condition_and = ""
     sql = '''SELECT * FROM type_gant;'''
-    sql2 = '''SELECT gant.id_gant as id_article,
-    nom_gant as nom,
-    prix_gant as prix,
-    image_gant as image,
-    SUM(declinaison.stock) as stock
+    sql2 = '''
+    SELECT gant.id_gant as id_article,
+    gant.nom_gant as nom,
+    gant.prix_gant as prix,
+    gant.image_gant as image,
+    SUM(declinaison.stock) as stock,
+    AVG(note.note) AS moy_notes,
+    COUNT(DISTINCT note.note) AS nb_notes,
+    COUNT(DISTINCT commentaire.commentaire) AS nb_avis
     FROM gant
-    JOIN declinaison ON declinaison.id_gant = gant.id_gant'''
+    JOIN declinaison ON declinaison.id_gant = gant.id_gant
+    LEFT JOIN note
+    ON gant.id_gant=note.id_gant
+    LEFT JOIN commentaire
+    ON gant.id_gant=commentaire.id_gant
+    '''
 
     if "filter_word" in session or "filter_prix_min" in session or "filter_prix_max" in session or "filter_types" in session:
         sql2 += " WHERE "
@@ -66,7 +75,6 @@ def client_article_show():                                 # remplace client_ind
         sql = '''SELECT SUM(ligne_panier.quantite * ligne_panier.prix) AS prix_total FROM ligne_panier WHERE ligne_panier.id_utilisateur = %s;'''
         mycursor.execute(sql, id_client)
         prix_total = mycursor.fetchone()['prix_total']
-        #print("prix ??")
         print(prix_total)
     else:
         prix_total = None
