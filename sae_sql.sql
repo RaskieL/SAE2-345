@@ -250,24 +250,3 @@ INSERT INTO etat(id_etat, libelle) VALUES
 (2,'expédié'),
 (3,'validé'),
 (4,'confirmé');
-
-INSERT INTO adresse(nom, rue, code_postal, ville, date_utilisation, id_utilisateur, etat, nb_commande)
-VALUES
-    ('Adresse Client', '123 Rue de la Ville', 75001, 'Paris', '2024-02-24', 2, 'VALIDE', 0),
-    ('Adresse Client2', '456 Rue de la Ville', 75002, 'Paris', '2024-02-25', 3, 'VALIDE', 0);
-
-INSERT INTO commande(date_achat, id_etat, id_adresse, id_adresse_1, id_utilisateur)
-VALUES
-    ('2024-02-24', 1, 1, 2, 2),
-    ('2024-02-25', 2, 2, 1, 3);
-
-INSERT INTO ligne_commande(id_declinaison, id_commande, quantite, prix)
-VALUES
-    (3, 1, 10, 169.99),
-    (5, 2, 1, 24.99),
-    (8, 2, 2, 13.98);
-
-INSERT INTO commentaire VALUES (2, 2, "2024-02-25", "Coucou j'adore ce produit", TRUE);
-INSERT INTO commentaire VALUES (2, 3, "2024-02-24", "Je suis moins fan", TRUE);
-
-INSERT INTO note VALUES (2, 2, 4.5);

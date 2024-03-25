@@ -28,18 +28,26 @@ def client_commande_valide():
     mycursor.execute(sql, (id_client))
     adresses = mycursor.fetchall()
 
-    sql = '''SELECT * FROM adresse JOIN adresse_favorite ON adresse_favorite.id_utilisateur = %s'''
-    mycursor.execute(sql, (id_client))
+    sql = '''SELECT adresse.* FROM adresse JOIN adresse_favorite ON adresse_favorite.id_adresse = adresse.id_adresse WHERE adresse_favorite.id_utilisateur = %s;'''
+    mycursor.execute(sql, (id_client,))
     adresse_fav = mycursor.fetchone()
 
     if adresse_fav is None:
-        sql = '''SELECT * FROM adresse WHERE id_utilisateur = %s AND etat = 'VALIDE' ORDER BY nb_commande DESC;'''
+        sql = '''SELECT * FROM adresse WHERE id_utilisateur = %s AND etat = 'VALIDE' ORDER BY nb_commande DESC LIMIT 1;'''
         mycursor.execute(sql, (id_client))
         adresse_fav = mycursor.fetchone()
         if adresse_fav is not None:
             new_adresse_fav = adresse_fav['id_adresse']
             sql = '''INSERT INTO adresse_favorite VALUES(%s,%s);'''
             mycursor.execute(sql, (id_client, new_adresse_fav))
+            get_db().commit()
+        else:
+            return render_template('client/boutique/panier_validation_adresses.html'
+                                    , adresses=adresses
+                                    , articles_panier=articles_panier
+                                    , prix_total= prix_total
+                                    , validation=1
+                                    )
         get_db().commit()
     
     return render_template('client/boutique/panier_validation_adresses.html'
