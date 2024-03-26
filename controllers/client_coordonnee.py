@@ -60,8 +60,12 @@ def client_coordonnee_edit_valide():
     login = request.form.get('login')
     email = request.form.get('email')
 
-    sql = '''SELECT id_utilisateur FROM utilisateur WHERE login = %s OR email = %s AND id_utilisateur != %s;'''
-    mycursor.execute(sql, (login, email, id_client))
+    sql = '''SELECT * FROM utilisateur WHERE id_utilisateur = %s;'''
+    mycursor.execute(sql, (id_client))
+    currUser = mycursor.fetchone()
+
+    sql = '''SELECT id_utilisateur FROM utilisateur WHERE (login = %s OR email = %s) AND (id_utilisateur != %s AND login != %s AND email != %s);'''
+    mycursor.execute(sql, (login, email, id_client, currUser['login'], currUser['email']))
     utilisateur = mycursor.fetchone()
 
     if utilisateur != '' and utilisateur:
@@ -76,6 +80,9 @@ def client_coordonnee_edit_valide():
     sql = '''UPDATE utilisateur SET nom = %s, login = %s, email = %s WHERE id_utilisateur = %s;'''
     mycursor.execute(sql, (nom,login,email,id_client))
     get_db().commit()
+
+    session['login'] = login
+
     
     return redirect('/client/coordonnee/show')
 
@@ -165,7 +172,6 @@ def client_coordonnee_edit_adresse():
                             ,utilisateur=utilisateur
                             ,adresse=adresse
                            )
-# REGLER PROBLEME QUAND MODIF ADRESSE FAV FAUT REMPLACER PAR AUTRE AVEC LE PLUS DE CMMANDES
 @client_coordonnee.route('/client/coordonnee/edit_adresse',methods=['POST'])
 def client_coordonnee_edit_adresse_valide():
     mycursor = get_db().cursor()
@@ -180,6 +186,10 @@ def client_coordonnee_edit_adresse_valide():
     mycursor.execute(sql, (id_adresse))
     nb_commande = mycursor.fetchone()['nb_commande']
 
+    sql = '''DELETE FROM adresse_favorite WHERE id_utilisateur = %s AND id_adresse = %s;'''
+    mycursor.execute(sql, (id_client, id_adresse))
+    get_db().commit()
+
     if nb_commande == 0:
         sql = '''UPDATE adresse SET nom = %s, rue = %s, code_postal = %s, ville = %s WHERE id_adresse = %s'''
         mycursor.execute(sql, (nom, rue, code_postal, ville, id_adresse))
@@ -188,6 +198,15 @@ def client_coordonnee_edit_adresse_valide():
         mycursor.execute(sql, (id_adresse))
         sql = '''INSERT INTO adresse (nom, rue, code_postal, ville, id_utilisateur, etat, nb_commande) VALUES (%s,%s,%s,%s,%s, 'VALIDE', 0);'''
         mycursor.execute(sql, (nom, rue, code_postal, ville, id_client))
+
+    sql = '''SELECT id_adresse FROM adresse WHERE id_utilisateur = %s AND etat = 'VALIDE' ORDER BY nb_commande DESC LIMIT 1;'''
+    mycursor.execute(sql, (id_client,))
+    new_adresse_fav = mycursor.fetchone()
+
+    if new_adresse_fav is not None:
+        new_adresse_fav_id = new_adresse_fav['id_adresse']
+        sql = '''INSERT INTO adresse_favorite (id_utilisateur, id_adresse) VALUES (%s, %s);'''
+        mycursor.execute(sql, (id_client, new_adresse_fav_id))
 
     get_db().commit()
     return redirect('/client/coordonnee/show')

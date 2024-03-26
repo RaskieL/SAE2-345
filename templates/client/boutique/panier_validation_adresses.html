@@ -10,8 +10,8 @@
             <form action="/client/commande/add"  style="display: inline-block;"  method="post" >
             {% if adresses | length > 0 %}
                 <br>
-                    <h4>Choisisser l'adresse de livraison</h4>
-                    <select  name="id_adresse_livraison" name="adresse_livraison" required  class="form-select">
+                    <h4>Choisissez l'adresse de livraison</h4>
+                    <select id="id_adresse_livraison" name="id_adresse_livraison" required  class="form-select" onchange="checkIdentique()">
                         <option value="">Sélectionner l'adresse de livraison</option>
                         {% for adresse in adresses %}
 
@@ -31,10 +31,10 @@
                     </select>
                     <br>
 
-                    <h4>Choisisser l'adresse de facturation</h4>
-                    adresse de facturation identique <input type="checkbox" name="adresse_identique" value="adresse_identique" id="adresse_identique" onclick="identique()">
+                    <h4>Choisissez l'adresse de facturation</h4>
+                    adresse de facturation identique <input type="checkbox" name="adresse_identique" value="adresse_identique" id="adresse_identique" checked onclick="identique()">
                 <br>
-                    <select  id="id_adresse_facturation" name="id_adresse_facturation" required class="form-select">
+                    <select  id="id_adresse_facturation" name="id_adresse_facturation" required class="form-select" onchange="checkIdentique()">
                         <option value="">Sélectionner l'adresse de facturation</option>
                         {% for adresse  in adresses %}
                              <option value="{{ adresse.id_adresse }}"
@@ -51,7 +51,7 @@
                     <a href="/client/coordonnee/show"  class="btn btn-primary">Ajouter une adresse (livrable 2)</a>
                 {% endif %}
                 <br>
-                <button class="btn btn-primary mt-4" > Passer ma commande </button>
+                <button class="btn btn-primary mt-4"> Passer ma commande </button>
             </form>
         </div>
     </div>
@@ -67,6 +67,15 @@
         {
         document.getElementById("id_adresse_facturation").style.display = 'block';
         document.getElementById("id_adresse_facturation").required = true;
+        }
+    };
+    function checkIdentique(){
+        if(document.getElementById('id_adresse_facturation').value == document.getElementById('id_adresse_livraison').value){
+            document.getElementById('adresse_identique').checked = true;
+            identique();
+        }else{
+            document.getElementById('adresse_identique').checked = false;
+            identique();
         }
     };
     </script>

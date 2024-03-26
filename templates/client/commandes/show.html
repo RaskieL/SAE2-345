@@ -62,7 +62,10 @@
                             <tr id="" {% if commande.id_etat == 1 %} style="background: #FFD600; font-weight: bold;" {% endif %}>
                                 <td>{{ commande.date_achat.strftime('%d-%m-%Y') }}</td>
                                 <td> {{ commande.nbr_articles }} </td>
-                                <td>{{ commande.prix_total*commande.nbr_articles }} €</td>
+                                <td>{% if commande.prix_total is defined or commande.nbr_articles is defined %}
+                                    {{ commande.prix_total*commande.nbr_articles }} €
+                                    {% else %}Erreur calculation du prix {% endif %}
+                                </td>
                                 <td style="text-align: center;">
                                     {% if commande.id_etat == 1 %} <div style="background-color: #ba8b00; padding: 5px;">en cours de traitement</div>
                                     {% else %} <div style="background-color: #34ce57; padding: 5px;">expédié</div>

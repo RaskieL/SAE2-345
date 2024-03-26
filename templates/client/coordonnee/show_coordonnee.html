@@ -22,8 +22,10 @@
         </div>
     </div>
     <br>
-    <div style="text-align: center"><h2 >Mon adresse favorite :</h2></div>
-    <div class="border m-auto p-3">
+    
+    
+    <div class="border m-auto p-3" {% if adresse_fav.id_adresse is defined %} style="display: block;" {% else %} style="display: none;" {% endif %}>
+        <div style="text-align: center"><h2 >Mon adresse favorite :</h2></div>
         <table class="table border">
             <thead class="thead-dark">
                 <tr>

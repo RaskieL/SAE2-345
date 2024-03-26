@@ -75,7 +75,9 @@ def client_commande_add():
         flash(u'Pas d\'articles dans le ligne_panier', 'alert-warning')
         return redirect('/client/article/show')
                                            # https://pynative.com/python-mysql-transaction-management-using-commit-rollback/
-
+    if id_adresse_livraison is None or id_adresse_facturation is None:
+        flash(u'Vous devez ajouter une adresse pour commander.', 'alert-warning')
+        return redirect('/client/coordonnee/show')
     sql = '''INSERT INTO commande(date_achat, id_etat, id_adresse, id_adresse_1, id_utilisateur) VALUES (NOW(),%s,%s,%s,%s)'''
     if adresse_identique:
         mycursor.execute(sql, (1, id_adresse_livraison, id_adresse_livraison, id_client))
@@ -101,7 +103,14 @@ def client_commande_add():
         sql =  '''INSERT INTO ligne_commande (id_declinaison, id_commande, quantite, prix) VALUES (%s, %s, %s, %s);'''
         mycursor.execute(sql, (item['id_declinaison'], id_commande['last_insert_id'], item['quantite'], item['prix']))
 
+    sql = '''DELETE FROM adresse_favorite WHERE id_utilisateur = %s;'''
+    mycursor.execute(sql, (id_client))
     get_db().commit()
+
+    sql = '''INSERT INTO adresse_favorite VALUES (%s,%s);'''
+    mycursor.execute(sql, (id_client, id_adresse_livraison))
+    get_db().commit()
+
     flash(u'Commande ajoutée','alert-success')
     return redirect('/client/article/show')
 
